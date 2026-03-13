@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#030310">
+<title>MORPHIQ — GREEK GOD SYSTEM 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   ROOT & RESET
+=========================== */
+:root {
+  --void:#030310;
+  --deep:#060620;
+  --ship:#0a0a28;
+  --hull:#0f0f35;
+  --panel:#141440;
+  --glass:rgba(14,14,50,0.85);
+  --aura:#00f5ff;
+  --aura2:#7c3aed;
+  --aura3:#e879f9;
+  --star:#ffffff;
+  --plasma:#38bdf8;
+  --gold:#f59e0b;
+  --gold2:#fcd34d;
+  --ember:#ef4444;
+  --bio:#10b981;
+  --txt:#e2e8f0;
+  --txt2:#94a3b8;
+  --txt3:#475569;
+  --bdr:rgba(0,245,255,0.15);
+  --bdr2:rgba(0,245,255,0.3);
+  --bdr3:rgba(0,245,255,0.5);
+  --glow:0 0 20px rgba(0,245,255,0.2);
+  --glow2:0 0 40px rgba(0,245,255,0.1);
+  --glow-gold:0 0 20px rgba(245,158,11,0.3);
+  --glow-purple:0 0 20px rgba(124,58,237,0.3);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--void);color:var(--txt);font-family:'Exo 2',sans-serif;font-size:15px;}
+body{display:flex;flex-direction:column;overflow:hidden;position:relative;}
+
+/* ===========================
+   JARVIS HUD BACKGROUND
+=========================== */
+#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#030310;}
+#cosmos canvas{position:absolute;inset:0;width:100%;height:100%;}
+/* Subtle depth glow blobs behind grid */
+.nebula{position:absolute;border-radius:50%;filter:blur(120px);opacity:0.04;animation:nebulaDrift 25s ease-in-out infinite alternate;}
+.nebula-1{width:700px;height:500px;background:radial-gradient(ellipse,#00f5ff,transparent);top:-150px;right:-150px;animation-delay:0s;}
+.nebula-2{width:600px;height:400px;background:radial-gradient(ellipse,#0a2fff,transparent);bottom:-100px;left:-150px;animation-delay:-10s;}
+.nebula-3{width:350px;height:350px;background:radial-gradient(ellipse,#00f5ff,transparent);top:50%;left:40%;animation-delay:-18s;}
+@keyframes nebulaDrift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(40px,25px) scale(1.08);}}
+
+/* ===========================
+   LAUNCH SCREEN
+=========================== */
+#launch-screen{
+  position:fixed;inset:0;z-index:999;
+  background:var(--void);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#launch-screen.hide{animation:launchExit 1.6s ease forwards;}
+@keyframes launchExit{
+  0%{opacity:1;}
+  100%{opacity:0;pointer-events:none;}
+}
+.launch-ring{
+  position:absolute;border-radius:50%;border:1px solid;
+  animation:ringPulse 3s ease-in-out infinite;
+}
+.launch-ring:nth-child(1){width:400px;height:400px;border-color:rgba(0,245,255,0.08);animation-delay:0s;}
+.launch-ring:nth-child(2){width:600px;height:600px;border-color:rgba(124,58,237,0.06);animation-delay:0.5s;}
+.launch-ring:nth-child(3){width:800px;height:800px;border-color:rgba(0,245,255,0.04);animation-delay:1s;}
+.launch-ring:nth-child(4){width:1000px;height:1000px;border-color:rgba(232,121,249,0.03);animation-delay:1.5s;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.03);opacity:1;}}
+
+.launch-core{
+  position:relative;z-index:10;text-align:center;padding:0 2rem;
+  animation:fadeInUp 1.5s ease forwards;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+
+.launch-emblem{
+  width:120px;height:120px;margin:0 auto 2rem;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.emblem-hex{
+  width:100%;height:100%;
+  background:linear-gradient(135deg, rgba(0,245,255,0.1), rgba(124,58,237,0.1));
+  clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border:1px solid rgba(0,245,255,0.4);
+  display:flex;align-items:center;justify-content:center;
+  animation:hexGlow 2s ease-in-out infinite alternate;
+}
+.emblem-hex::before{
+  content:'';position:absolute;inset:4px;
+  clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background:linear-gradient(135deg,rgba(0,245,255,0.05),rgba(232,121,249,0.05));
+}
+@keyframes hexGlow{0%{box-shadow:0 0 20px rgba(0,245,255,0.2);}100%{box-shadow:0 0 60px rgba(0,245,255,0.5),0 0 100px rgba(124,58,237,0.2);}}
+.emblem-inner{font-family:'Orbitron',sans-serif;font-size:32px;font-weight:900;color:var(--aura);position:relative;z-index:1;text-shadow:0 0 30px var(--aura);}
+
+.launch-subtitle{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:.3em;color:var(--aura);
+  margin-bottom:.5rem;text-transform:uppercase;
+  animation:textFlicker 4s ease-in-out infinite;
+}
+@keyframes textFlicker{0%,90%,100%{opacity:1;}92%{opacity:0.7;}94%{opacity:1;}96%{opacity:0.8;}}
+.launch-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(28px,7vw,52px);
+  font-weight:900;
+  background:linear-gradient(135deg,#ffffff,var(--aura),var(--aura3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.1;margin-bottom:.75rem;
+  text-shadow:none;
+}
+.launch-tagline{
+  font-family:'Exo 2',sans-serif;
+  font-size:15px;font-weight:300;
+  color:var(--txt2);letter-spacing:.15em;
+  margin-bottom:3rem;line-height:1.7;
+}
+.launch-tagline span{color:var(--aura);font-weight:600;}
+
+.launch-stats-row{
+  display:flex;gap:2rem;justify-content:center;margin-bottom:3rem;
+  flex-wrap:wrap;
+}
+.lstat{text-align:center;}
+.lstat-val{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--aura);}
+.lstat-lbl{font-size:10px;letter-spacing:.15em;color:var(--txt3);margin-top:2px;}
+
+.initiate-btn{
+  position:relative;overflow:hidden;
+  background:transparent;
+  border:2px solid var(--aura);
+  color:var(--aura);
+  font-family:'Orbitron',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.25em;
+  padding:18px 52px;
+  border-radius:4px;
+  cursor:pointer;
+  text-transform:uppercase;
+  transition:all 0.3s ease;
+  box-shadow:0 0 30px rgba(0,245,255,0.2),inset 0 0 30px rgba(0,245,255,0.05);
+}
+.initiate-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.1));
+  opacity:0;transition:opacity 0.3s;
+}
+.initiate-btn:hover::before{opacity:1;}
+.initiate-btn:hover{
+  box-shadow:0 0 60px rgba(0,245,255,0.5),inset 0 0 40px rgba(0,245,255,0.1);
+  border-color:rgba(0,245,255,0.8);
+  transform:translateY(-2px);
+}
+.initiate-btn:active{transform:translateY(0) scale(0.98);}
+.btn-scan{
+  position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,245,255,0.3),transparent);
+  animation:btnScan 3s ease-in-out infinite;
+}
+@keyframes btnScan{0%{left:-100%;}100%{left:200%;}}
+
+.launch-lore{
+  margin-top:2rem;
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:.1em;color:var(--txt3);
+  max-width:340px;line-height:1.8;text-align:center;
+}
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--aura),var(--aura2));border-radius:2px;}
+
+/* ===========================
+   APP WRAPPER (hidden until launch)
+=========================== */
+#app{
+  display:flex;flex-direction:column;height:100%;
+  position:relative;z-index:1;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.8s ease 0.3s;
+}
+#app.visible{opacity:1;pointer-events:all;}
+
+/* ===========================
+   HEADER
+=========================== */
+.hdr{
+  background:rgba(6,6,32,0.95);
+  border-bottom:1px solid var(--bdr);
+  padding:10px 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+  backdrop-filter:blur(20px);
+  position:relative;
+}
+.hdr::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--aura),var(--aura3),var(--aura2),transparent);
+  opacity:0.4;
+}
+.hdr-left .sys-tag{
+  font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:.2em;color:var(--aura);
+  text-shadow:0 0 10px var(--aura);
+}
+.hdr-left .sys-date{font-size:12px;color:var(--txt2);margin-top:2px;font-family:'Share Tech Mono',monospace;}
+
+.rank-badge{
+  background:linear-gradient(135deg,rgba(0,245,255,0.05),rgba(124,58,237,0.08));
+  border:1px solid var(--bdr2);
+  border-radius:6px;padding:5px 12px;
+  text-align:center;
+  box-shadow:var(--glow);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.rank-badge:hover{box-shadow:0 0 30px rgba(0,245,255,0.4);}
+.rank-letter{
+  font-family:'Orbitron',sans-serif;
+  font-size:24px;font-weight:900;line-height:1;
+  color:var(--aura);text-shadow:0 0 20px var(--aura);
+}
+.rank-label{font-size:9px;letter-spacing:.15em;color:var(--txt3);margin-top:1px;font-family:'Share Tech Mono',monospace;}
+.streak-num{
+  font-size:11px;color:var(--gold2);
+  font-family:'Share Tech Mono',monospace;text-align:right;
+  text-shadow:0 0 8px var(--gold);
+}
+
+/* ===========================
+   MAIN CONTENT
+=========================== */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scroll-behavior:smooth;}
+.tab-pane{
+  display:none;
+  padding:16px 14px calc(16px + var(--safe-bottom));
+  animation:paneReveal 0.5s var(--transition) forwards;
+  min-height:100%;
+}
+.tab-pane.active{display:block;}
+@keyframes paneReveal{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* ===========================
+   BOTTOM NAV
+=========================== */
+.bnav{
+  background:rgba(6,6,32,0.97);
+  border-top:1px solid var(--bdr);
+  display:flex;overflow-x:auto;
+  flex-shrink:0;scrollbar-width:none;
+  padding-bottom:var(--safe-bottom);
+  backdrop-filter:blur(20px);
+  position:relative;
+}
+.bnav::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--aura2),var(--aura),var(--aura3),transparent);
+  opacity:0.3;
+}
+.bnav::-webkit-scrollbar{display:none;}
+.bnav-btn{
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;
+  padding:8px 12px 6px;min-width:58px;
+  background:none;border:none;cursor:pointer;
+  color:var(--txt3);
+  font-family:'Orbitron',sans-serif;font-size:7px;letter-spacing:.1em;
+  transition:all .2s;gap:4px;position:relative;
+}
+.bnav-btn .ic{font-size:16px;line-height:1;}
+.bnav-btn.active{color:var(--aura);}
+.bnav-btn.active::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--aura),transparent);
+  border-radius:1px;
+  box-shadow:0 0 8px var(--aura);
+}
+.bnav-btn:hover{color:var(--txt2);}
+
+/* ===========================
+   SYSTEM WINDOW (SW)
+=========================== */
+.sw{
+  background:var(--glass);
+  border:1px solid var(--bdr);
+  border-radius:10px;
+  margin-bottom:12px;
+  overflow:hidden;
+  backdrop-filter:blur(20px);
+  position:relative;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.sw::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,245,255,0.4),transparent);
+}
+.sw:hover{border-color:var(--bdr2);box-shadow:var(--glow2);}
+.sw-head{
+  background:rgba(15,15,53,0.8);
+  border-bottom:1px solid var(--bdr);
+  padding:10px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.sw-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:.18em;color:var(--aura);
+  font-weight:600;
+}
+.sw-action{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--aura);
+  background:none;border:none;cursor:pointer;
+  letter-spacing:.05em;opacity:0.7;
+  transition:opacity 0.2s;
+}
+.sw-action:hover{opacity:1;}
+.sw-body{padding:12px 14px;}
+
+/* ===========================
+   STAT BARS
+=========================== */
+.stat-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.stat-lbl{font-size:11px;color:var(--txt2);min-width:64px;letter-spacing:.05em;font-family:'Share Tech Mono',monospace;}
+.stat-bar-bg{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(0.25,0.46,0.45,0.94);position:relative;}
+.stat-bar-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:6px;background:white;opacity:0.6;border-radius:3px;filter:blur(2px);}
+.stat-val{font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--txt);min-width:80px;text-align:right;}
+
+/* ===========================
+   METRICS GRID
+=========================== */
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px;}
+.mc{
+  background:var(--glass);
+  border:1px solid var(--bdr);
+  border-radius:8px;padding:12px 10px 10px;text-align:center;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(20px);
+  transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.mc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,245,255,0.5),transparent);
+}
+.mc:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--glow2);}
+.mc-lbl{font-size:9px;color:var(--txt3);letter-spacing:.12em;margin-bottom:5px;font-family:'Share Tech Mono',monospace;}
+.mc-val{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:700;color:var(--aura);line-height:1;text-shadow:0 0 15px rgba(0,245,255,0.3);}
+.mc-unit{font-size:10px;color:var(--txt2);margin-top:2px;font-family:'Share Tech Mono',monospace;}
+
+/* ===========================
+   CHECKLIST
+=========================== */
+.ci{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,245,255,0.06);}
+.ci:last-child{border-bottom:none;}
+.cb{
+  width:20px;height:20px;border-radius:4px;
+  border:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;cursor:pointer;
+  transition:all .2s;margin-top:1px;
+}
+.cb.on{background:linear-gradient(135deg,var(--aura),var(--aura2));border-color:transparent;box-shadow:0 0 10px rgba(0,245,255,0.4);}
+.cb-tick{width:9px;height:6px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px);display:none;}
+.cb.on .cb-tick{display:block;}
+.ci-text{font-size:14px;color:var(--txt);line-height:1.5;flex:1;font-family:'Exo 2',sans-serif;}
+.ci.done .ci-text{color:var(--txt3);text-decoration:line-through;}
+.ci-edit{font-size:13px;background:none;border:none;color:var(--txt3);cursor:pointer;padding:0 2px;}
+
+/* ===========================
+   INPUTS
+=========================== */
+input[type=text],input[type=number],textarea,select{
+  background:rgba(10,10,40,0.8);
+  border:1px solid var(--bdr);
+  border-radius:6px;
+  color:var(--txt);
+  font-family:'Exo 2',sans-serif;
+  font-size:14px;
+  padding:9px 12px;
+  width:100%;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+  backdrop-filter:blur(10px);
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--aura);
+  box-shadow:0 0 0 3px rgba(0,245,255,0.1);
+}
+textarea{resize:vertical;line-height:1.6;}
+select option{background:#0a0a28;}
+
+/* ===========================
+   BUTTONS
+=========================== */
+.btn{
+  padding:10px 20px;border-radius:6px;font-family:'Orbitron',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.12em;cursor:pointer;border:none;
+  transition:all .2s;text-transform:uppercase;
+}
+.btn-pri{
+  background:linear-gradient(135deg,rgba(0,245,255,0.2),rgba(124,58,237,0.2));
+  border:1px solid var(--aura);color:var(--aura);
+  box-shadow:0 0 20px rgba(0,245,255,0.15);
+}
+.btn-pri:hover{box-shadow:0 0 30px rgba(0,245,255,0.3);transform:translateY(-1px);}
+.btn-pri:active{transform:scale(.97);opacity:0.9;}
+.btn-sec{
+  background:transparent;border:1px solid var(--bdr2);color:var(--txt2);
+  transition:all 0.2s;
+}
+.btn-sec:hover{border-color:var(--aura);color:var(--aura);}
+.btn-sec:active{background:rgba(0,245,255,0.05);}
+.btn-sm{padding:5px 12px;font-size:10px;border-radius:4px;}
+.btn-danger{
+  background:transparent;border:1px solid rgba(239,68,68,.3);
+  color:#FCA5A5;font-size:10px;padding:5px 10px;border-radius:4px;
+  font-family:'Orbitron',sans-serif;cursor:pointer;letter-spacing:.05em;
+  transition:all 0.2s;
+}
+.btn-danger:hover{border-color:var(--ember);box-shadow:0 0 10px rgba(239,68,68,0.2);}
+
+/* ===========================
+   BADGE
+=========================== */
+.badge{
+  display:inline-block;padding:3px 10px;border-radius:4px;
+  font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.08em;font-weight:600;
+}
+.b-blue{background:rgba(56,189,248,.12);color:#7dd3fc;border:1px solid rgba(56,189,248,.25);}
+.b-gold{background:rgba(245,158,11,.12);color:var(--gold2);border:1px solid rgba(245,158,11,.25);}
+.b-red{background:rgba(239,68,68,.12);color:#FCA5A5;border:1px solid rgba(239,68,68,.25);}
+.b-green{background:rgba(16,185,129,.12);color:#6EE7B7;border:1px solid rgba(16,185,129,.25);}
+.b-purple{background:rgba(139,92,246,.12);color:#C4B5FD;border:1px solid rgba(139,92,246,.25);}
+.b-cyan{background:rgba(0,245,255,.1);color:var(--aura);border:1px solid rgba(0,245,255,.2);}
+
+/* ===========================
+   SET CHIPS
+=========================== */
+.set-chip{
+  background:rgba(10,10,40,0.8);border:1px solid var(--bdr);
+  border-radius:4px;padding:5px 10px;font-size:11px;
+  cursor:pointer;color:var(--txt2);transition:all .2s;
+  font-family:'Share Tech Mono',monospace;
+}
+.set-chip.done{
+  background:rgba(0,245,255,0.1);
+  border-color:var(--aura);color:var(--aura);
+  box-shadow:0 0 8px rgba(0,245,255,0.2);
+}
+
+/* ===========================
+   IR ROW
+=========================== */
+.ir{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(0,245,255,0.06);}
+.ir:last-child{border-bottom:none;}
+.ir-lbl{font-size:13px;color:var(--txt2);font-family:'Exo 2',sans-serif;}
+.ir-val{font-size:13px;font-weight:600;color:var(--txt);font-family:'Share Tech Mono',monospace;}
+
+/* ===========================
+   INFO BOXES
+=========================== */
+.info-box{
+  background:rgba(0,245,255,0.04);border:1px solid rgba(0,245,255,0.12);
+  border-radius:6px;padding:12px 14px;font-size:13px;color:var(--txt2);
+  line-height:1.7;margin-top:8px;font-family:'Exo 2',sans-serif;
+}
+.warn-box{
+  background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,.2);
+  border-radius:6px;padding:12px 14px;font-size:13px;color:var(--gold2);
+  line-height:1.7;margin-top:8px;
+}
+
+/* ===========================
+   EXP BAR
+=========================== */
+.exp-wrap{margin:8px 0;}
+.exp-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--txt3);margin-bottom:4px;letter-spacing:.08em;font-family:'Share Tech Mono',monospace;}
+.exp-bar{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.exp-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--aura2),var(--aura),var(--aura3));
+  border-radius:3px;transition:width .6s ease;position:relative;
+}
+.exp-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 80%,rgba(255,255,255,0.6));animation:expSweep 2s linear infinite;}
+@keyframes expSweep{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
+
+/* ===========================
+   SECTION LABEL
+=========================== */
+.sec-lbl{
+  font-family:'Orbitron',sans-serif;
+  font-size:9px;letter-spacing:.18em;color:var(--txt3);
+  margin-bottom:8px;margin-top:4px;text-transform:uppercase;
+}
+
+/* ===========================
+   MODAL
+=========================== */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);
+  z-index:100;display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:rgba(10,10,40,0.98);
+  border:1px solid var(--bdr2);
+  border-top:1px solid var(--bdr3);
+  border-radius:14px 14px 0 0;
+  padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;
+  transform:translateY(40px);transition:transform .3s cubic-bezier(0.25,0.46,0.45,0.94);
+  backdrop-filter:blur(20px);
+}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:12px;letter-spacing:.15em;color:var(--aura);margin-bottom:16px;font-weight:600;
+}
+
+/* ===========================
+   TOAST
+=========================== */
+.toast{
+  position:fixed;bottom:calc(75px + var(--safe-bottom));left:50%;transform:translateX(-50%);
+  background:rgba(10,10,40,0.95);
+  border:1px solid var(--aura);
+  color:var(--aura);padding:8px 20px;border-radius:20px;
+  font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.12em;
+  opacity:0;transition:opacity .25s;pointer-events:none;z-index:200;
+  white-space:nowrap;
+  box-shadow:0 0 20px rgba(0,245,255,0.3);
+  text-shadow:0 0 8px var(--aura);
+}
+.toast.show{opacity:1;}
+
+/* ===========================
+   RANGE INPUT
+=========================== */
+input[type=range]{padding:0;background:transparent;-webkit-appearance:none;width:100%;}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--aura),var(--aura2));margin-top:-7px;cursor:pointer;box-shadow:0 0 10px var(--aura);}
+
+/* ===========================
+   WKBAR
+=========================== */
+.wkbar{display:flex;gap:5px;margin-bottom:4px;}
+.wkday{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.wkday-lbl{font-size:9px;color:var(--txt3);font-family:'Share Tech Mono',monospace;}
+.wkday-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);transition:all .3s;}
+.wkday-dot.on{background:var(--aura);box-shadow:0 0 10px var(--aura);border-color:transparent;}
+
+/* ===========================
+   GRID & UTILITIES
+=========================== */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.gap8{gap:8px;}.mt8{margin-top:8px;}.mt12{margin-top:12px;}
+.mb8{margin-bottom:8px;}.mb12{margin-bottom:12px;}
+.flex{display:flex;}.flex-center{display:flex;align-items:center;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
+.gap6{gap:6px;}.fwrap{flex-wrap:wrap;}
+
+/* ===========================
+   HEATMAP
+=========================== */
+.heatmap-grid{
+  display:grid;
+  grid-template-columns:repeat(52,1fr);
+  gap:2px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+.hm-cell{
+  aspect-ratio:1;border-radius:2px;
+  background:rgba(255,255,255,0.04);
+  transition:all 0.2s;
+  cursor:pointer;
+  min-width:8px;
+}
+.hm-cell:hover{transform:scale(1.4);z-index:2;position:relative;}
+.hm-0{background:rgba(255,255,255,0.04);}
+.hm-1{background:rgba(0,245,255,0.2);box-shadow:0 0 4px rgba(0,245,255,0.1);}
+.hm-2{background:rgba(0,245,255,0.4);box-shadow:0 0 6px rgba(0,245,255,0.2);}
+.hm-3{background:rgba(0,245,255,0.6);box-shadow:0 0 8px rgba(0,245,255,0.3);}
+.hm-4{background:rgba(0,245,255,0.85);box-shadow:0 0 10px rgba(0,245,255,0.5);}
+.hm-5{background:var(--aura);box-shadow:0 0 12px var(--aura);}
+.hm-legend{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-top:8px;}
+.hm-legend-cell{width:12px;height:12px;border-radius:2px;}
+.hm-legend-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);}
+
+.hm-month-labels{
+  display:flex;justify-content:space-between;
+  margin-bottom:4px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:var(--txt3);
+}
+.hm-day-labels{display:flex;flex-direction:column;gap:2px;margin-right:6px;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--txt3);}
+
+.hm-wrap{display:flex;overflow-x:auto;}
+
+/* ===========================
+   RANK PAGE
+=========================== */
+.rank-card{
+  background:var(--glass);border:1px solid var(--bdr);border-radius:10px;
+  padding:16px;margin-bottom:10px;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(20px);
+  transition:all 0.3s;
+}
+.rank-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rank-color,var(--aura)),transparent);
+}
+.rank-card:hover{transform:translateX(4px);}
+.rank-card.active-rank{
+  border-color:var(--rank-color,var(--aura));
+  box-shadow:0 0 30px rgba(var(--rank-rgb,0,245,255),0.2);
+}
+.rank-card-letter{
+  font-family:'Orbitron',sans-serif;
+  font-size:48px;font-weight:900;
+  line-height:1;
+  color:var(--rank-color,var(--aura));
+  text-shadow:0 0 30px var(--rank-color,var(--aura));
+}
+.rank-card-name{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--txt);margin-bottom:4px;}
+.rank-card-req{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt3);}
+.rank-card-desc{font-size:13px;color:var(--txt2);line-height:1.6;margin-top:8px;}
+.rank-perks{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.rank-progress-fill{
+  height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--rank-color,var(--aura)),rgba(255,255,255,0.5));
+  transition:width 1s ease;
+}
+
+
+
+/* ===========================
+   PAGE SECTION — INTRO / WELCOME
+=========================== */
+#pane-home .home-banner{
+  background:linear-gradient(135deg,rgba(0,245,255,0.06),rgba(124,58,237,0.08));
+  border:1px solid var(--bdr);border-radius:12px;
+  padding:24px;margin-bottom:14px;text-align:center;
+  position:relative;overflow:hidden;
+}
+#pane-home .home-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(0,245,255,0.08),transparent 60%);
+}
+.home-title{
+  font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;
+  background:linear-gradient(135deg,#fff,var(--aura),var(--aura3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;position:relative;
+}
+.home-sub{font-size:12px;color:var(--txt2);letter-spacing:.15em;font-family:'Share Tech Mono',monospace;position:relative;}
+.home-quick-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.hqs{
+  background:var(--glass);border:1px solid var(--bdr);border-radius:8px;padding:12px;
+  display:flex;align-items:center;gap:12px;backdrop-filter:blur(20px);
+}
+.hqs-icon{font-size:22px;}
+.hqs-val{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:var(--aura);}
+.hqs-lbl{font-size:10px;color:var(--txt3);letter-spacing:.1em;font-family:'Share Tech Mono',monospace;}
+
+/* ===========================
+   MISC
+=========================== */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent);margin:12px 0;}
+</style>
+</head>
+<body>
+
+<!-- COSMIC BACKGROUND -->
+<div id="cosmos">
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  <div class="nebula nebula-3"></div>
+  <canvas id="star-canvas"></canvas>
+</div>
+
+
+<!-- ==================== LAUNCH SCREEN ==================== -->
+<div id="launch-screen">
+  <div class="launch-ring"></div>
+  <div class="launch-ring"></div>
+  <div class="launch-ring"></div>
+  <div class="launch-ring"></div>
+
+  <div class="launch-core">
+    <div class="launch-emblem">
+      <div class="emblem-hex">
+        <div class="emblem-inner">M</div>
+      </div>
+    </div>
+
+    <div class="launch-subtitle">◈ GREEK GOD SYSTEM 2026 ◈</div>
+    <div class="launch-title">MORPHIQ</div>
+    <div class="launch-tagline">
+      Transcend the ordinary.<br>
+      <span>Body. Mind. Aesthetic. Sovereignty.</span>
+    </div>
+
+    <div class="launch-stats-row">
+      <div class="lstat">
+        <div class="lstat-val" id="ls-rank">E</div>
+        <div class="lstat-lbl">CURRENT RANK</div>
+      </div>
+      <div class="lstat">
+        <div class="lstat-val" id="ls-streak">0</div>
+        <div class="lstat-lbl">DAY STREAK</div>
+      </div>
+      <div class="lstat">
+        <div class="lstat-val" id="ls-ops">0%</div>
+        <div class="lstat-lbl">OPS TODAY</div>
+      </div>
+    </div>
+
+    <button class="initiate-btn" onclick="initiateSequence()">
+      <div class="btn-scan"></div>
+      INITIATE SEQUENCE
+    </button>
+
+    <div class="launch-lore">
+      All data is stored locally on your device.<br>
+      Your transformation is your sovereign mission.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP ==================== -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="sys-tag">◈ MORPHIQ SYSTEM</div>
+      <div class="sys-date" id="hdr-date">—</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="streak-num" id="streak-disp">0 DAY STREAK</div>
+      <div class="rank-badge" style="margin-top:4px;display:inline-flex;align-items:center;gap:8px;padding:4px 12px;" onclick="showTab('rank')">
+        <div>
+          <div class="rank-letter" id="rank-letter">E</div>
+          <div class="rank-label">RANK</div>
+        </div>
+        <div id="rank-name" style="font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.1em;color:var(--txt2);">AWAKENING</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLLABLE CONTENT -->
+  <div class="main" id="main">
+
+    <!-- ===== HOME / INTRO ===== -->
+    <div class="tab-pane active" id="pane-home">
+      <div class="home-banner">
+        <div class="home-title">SYSTEM ONLINE</div>
+        <div class="home-sub" id="home-date-full">—</div>
+      </div>
+
+      <div class="home-quick-stats">
+        <div class="hqs"><div class="hqs-icon">⚡</div><div><div class="hqs-val" id="hs-streak">0</div><div class="hqs-lbl">DAY STREAK</div></div></div>
+        <div class="hqs"><div class="hqs-icon">🏆</div><div><div class="hqs-val" id="hs-rank">E</div><div class="hqs-lbl">RANK</div></div></div>
+        <div class="hqs"><div class="hqs-icon">⚖️</div><div><div class="hqs-val" id="hs-weight">69</div><div class="hqs-lbl">KG</div></div></div>
+        <div class="hqs"><div class="hqs-icon">✅</div><div><div class="hqs-val" id="hs-ops">0%</div><div class="hqs-lbl">OPS DONE</div></div></div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ SYSTEM NOTICE</span></div>
+        <div class="sw-body">
+          <div style="font-size:14px;line-height:1.7;color:var(--txt);" id="daily-focus">—</div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ COMMAND OVERVIEW</span></div>
+        <div class="sw-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('status')">
+              <span style="font-size:22px;">⚡</span>STATUS
+            </button>
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('training')">
+              <span style="font-size:22px;">🏋</span>TRAIN
+            </button>
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('nutrition')">
+              <span style="font-size:22px;">🍽</span>FUEL
+            </button>
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('ops')">
+              <span style="font-size:22px;">✅</span>OPS
+            </button>
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('rank')">
+              <span style="font-size:22px;">🏅</span>RANKS
+            </button>
+            <button class="btn btn-sec" style="padding:14px;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:6px;" onclick="showTab('heatmap')">
+              <span style="font-size:22px;">🔥</span>HEATMAP
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ WEEKLY PROGRESS</span></div>
+        <div class="sw-body">
+          <div class="wkbar" id="wkbar-home"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span class="wkday-lbl">Mon</span><span class="wkday-lbl">Tue</span>
+            <span class="wkday-lbl">Wed</span><span class="wkday-lbl">Thu</span>
+            <span class="wkday-lbl">Fri</span><span class="wkday-lbl">Sat</span>
+            <span class="wkday-lbl">Sun</span>
+          </div>
+          <div class="exp-wrap mt8">
+            <div class="exp-lbl"><span>DAILY OPS</span><span id="xp-txt-home">0 / 0</span></div>
+            <div class="exp-bar"><div class="exp-fill" id="xp-bar-home" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STATUS ===== -->
+    <div class="tab-pane" id="pane-status">
+      <div class="mgrid">
+        <div class="mc"><div class="mc-lbl">WEIGHT</div><div class="mc-val" id="ov-wt">69</div><div class="mc-unit">kg</div></div>
+        <div class="mc"><div class="mc-lbl">STEPS</div><div class="mc-val" id="ov-stp">0</div><div class="mc-unit">k today</div></div>
+        <div class="mc"><div class="mc-lbl">KCAL LEFT</div><div class="mc-val" id="ov-cal">—</div><div class="mc-unit">remaining</div></div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ PLAYER STATUS</span><span id="today-wo-badge" class="badge b-blue">—</span></div>
+        <div class="sw-body">
+          <div id="ov-stats"></div>
+          <div class="exp-wrap mt8">
+            <div class="exp-lbl"><span>WEEKLY XP</span><span id="xp-txt">0 / 7</span></div>
+            <div class="exp-bar"><div class="exp-fill" id="xp-bar" style="width:0%"></div></div>
+          </div>
+          <div class="wkbar mt8" id="wkbar"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:2px;">
+            <span class="wkday-lbl">Mon</span><span class="wkday-lbl">Tue</span>
+            <span class="wkday-lbl">Wed</span><span class="wkday-lbl">Thu</span>
+            <span class="wkday-lbl">Fri</span><span class="wkday-lbl">Sat</span>
+            <span class="wkday-lbl">Sun</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ LOG WEIGHT</span></div>
+        <div class="sw-body">
+          <div class="flex gap8">
+            <input type="number" id="wt-inp" placeholder="69.0" step="0.1" style="flex:1;">
+            <button class="btn btn-pri" onclick="logWeight()">UPDATE</button>
+          </div>
+          <div id="wt-history" style="margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TRAINING ===== -->
+    <div class="tab-pane" id="pane-training">
+      <div class="sw">
+        <div class="sw-head">
+          <span class="sw-title" id="wo-day-title">◈ TODAY'S SESSION</span>
+          <div class="flex gap6">
+            <span id="wo-day-badge" class="badge b-blue">—</span>
+            <button class="sw-action" onclick="openWOEditor()">EDIT</button>
+          </div>
+        </div>
+        <div class="sw-body" id="wo-body"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ POSTURE PROTOCOL</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">Every session</span></div>
+        <div class="sw-body" id="posture-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ PRIORITY WEAKNESSES</span></div>
+        <div class="sw-body">
+          <div class="flex fwrap gap6">
+            <span class="badge b-red">Upper chest</span><span class="badge b-red">Triceps</span>
+            <span class="badge b-blue">V-taper / lats</span><span class="badge b-gold">Shoulders</span>
+            <span class="badge b-cyan">Core / APT</span><span class="badge b-green">Posture</span>
+          </div>
+          <div class="info-box mt8">Lead every push session with incline. Upper chest transforms your silhouette first. Never start flat.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NUTRITION ===== -->
+    <div class="tab-pane" id="pane-nutrition">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ MACRO STATUS</span><button class="sw-action" onclick="openMacroGoals()">EDIT GOALS</button></div>
+        <div class="sw-body">
+          <div class="flex-between mb8">
+            <div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt2);">CALORIES REMAINING</div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:36px;font-weight:700;color:var(--aura);line-height:1.1;text-shadow:0 0 20px rgba(0,245,255,0.3);" id="cal-rem">—</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:10px;color:var(--txt3);font-family:'Share Tech Mono',monospace;">GOAL</div>
+              <div style="font-size:16px;color:var(--txt2);font-family:'Orbitron',sans-serif;" id="cal-goal-disp">— kcal</div>
+            </div>
+          </div>
+          <div class="stat-row"><span class="stat-lbl">PROTEIN</span><div class="stat-bar-bg"><div class="stat-bar-fill" id="p-bar" style="width:0%;background:linear-gradient(90deg,var(--aura2),var(--plasma));"></div></div><span class="stat-val"><span id="p-cur">0</span>/<span id="p-goal">150</span>g</span></div>
+          <div class="stat-row"><span class="stat-lbl">CARBS</span><div class="stat-bar-bg"><div class="stat-bar-fill" id="c-bar" style="width:0%;background:linear-gradient(90deg,var(--aura),var(--aura3));"></div></div><span class="stat-val"><span id="c-cur">0</span>/<span id="c-goal">150</span>g</span></div>
+          <div class="stat-row"><span class="stat-lbl">FATS</span><div class="stat-bar-bg"><div class="stat-bar-fill" id="f-bar" style="width:0%;background:linear-gradient(90deg,var(--bio),#34d399);"></div></div><span class="stat-val"><span id="f-cur">0</span>/<span id="f-goal">55</span>g</span></div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ LOG MEAL</span></div>
+        <div class="sw-body">
+          <div class="grid2 mb8">
+            <div><div class="sec-lbl">MEAL NAME</div><input type="text" id="m-name" placeholder="Dal + rice"></div>
+            <div><div class="sec-lbl">CALORIES</div><input type="number" id="m-cal" placeholder="450"></div>
+            <div><div class="sec-lbl">PROTEIN (g)</div><input type="number" id="m-p" placeholder="35"></div>
+            <div><div class="sec-lbl">CARBS (g)</div><input type="number" id="m-c" placeholder="60"></div>
+            <div><div class="sec-lbl">FATS (g)</div><input type="number" id="m-f" placeholder="10"></div>
+          </div>
+          <button class="btn btn-pri" style="width:100%;" onclick="logMeal()">ADD MEAL</button>
+        </div>
+      </div>
+      <div id="meal-log-wrap"></div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ HYDRATION</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">Goal: 3L daily</span></div>
+        <div class="sw-body">
+          <div style="text-align:center;margin-bottom:12px;">
+            <div style="font-family:'Orbitron',sans-serif;font-size:48px;font-weight:700;color:var(--plasma);text-shadow:0 0 20px rgba(56,189,248,0.4);" id="water-disp">0</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt3);">/ 3000 ml</div>
+          </div>
+          <div class="stat-bar-bg" style="height:8px;margin-bottom:14px;"><div class="stat-bar-fill" id="water-bar" style="width:0%;background:linear-gradient(90deg,var(--plasma),var(--aura));"></div></div>
+          <div class="flex gap8">
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addWater(250)">+250ml</button>
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addWater(500)">+500ml</button>
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addWater(750)">+750ml</button>
+            <button class="btn-danger btn-sm" onclick="resetWater()">RST</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ SUPPLEMENTS</span><button class="sw-action" onclick="openSuppEditor()">EDIT</button></div>
+        <div class="sw-body" id="supp-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== STEPS ===== -->
+    <div class="tab-pane" id="pane-steps">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ STEPS TODAY</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">Goal: 10,000</span></div>
+        <div class="sw-body" style="text-align:center;padding:1.5rem 14px 1rem;">
+          <div style="font-family:'Orbitron',sans-serif;font-size:56px;font-weight:700;color:var(--aura);line-height:1;text-shadow:0 0 30px rgba(0,245,255,0.3);" id="steps-num">0</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt2);margin:6px 0 16px;">STEPS</div>
+          <div class="stat-bar-bg" style="height:8px;margin-bottom:16px;"><div class="stat-bar-fill" id="steps-bar" style="width:0%;background:linear-gradient(90deg,var(--aura),var(--aura3));"></div></div>
+          <div class="flex gap8">
+            <input type="number" id="steps-inp" placeholder="Enter steps" style="flex:1;">
+            <button class="btn btn-pri" onclick="updateSteps()">SET</button>
+          </div>
+          <div class="flex gap8 mt8">
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addSteps(1000)">+1k</button>
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addSteps(2000)">+2k</button>
+            <button class="btn btn-sec" style="flex:1;font-size:10px;" onclick="addSteps(5000)">+5k</button>
+          </div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ WHY THIS MATTERS</span></div>
+        <div class="sw-body">
+          <div class="info-box" style="margin-top:0;">Sitting all day kills NEAT (non-exercise activity thermogenesis). 10k steps burns 300–400 kcal daily with zero gym and zero recovery cost. This is your primary weapon against love handles and waist fat. Make it non-negotiable.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HAIR ===== -->
+    <div class="tab-pane" id="pane-hair">
+      <div class="warn-box" style="margin-bottom:12px;">⚠ RECOVERY MODE — Seb derm treatment only. Growth agents to be added when prescribed.</div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ AGA STATUS</span></div>
+        <div class="sw-body">
+          <div class="flex fwrap gap6 mb8">
+            <span class="badge b-gold">Early Norwood 2</span>
+            <span class="badge b-red">Temple recession</span>
+            <span class="badge b-purple">Seb Derm active</span>
+          </div>
+          <div style="font-size:13px;line-height:1.65;color:var(--txt2);">Miniaturisation at corners confirmed. Fully manageable at this stage with consistent protocol.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ MORNING PROTOCOL</span><button class="sw-action" onclick="editSection('hairMorning')">EDIT</button></div>
+        <div class="sw-body" id="hair-am-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ NIGHT PROTOCOL</span><button class="sw-action" onclick="editSection('hairNight')">EDIT</button></div>
+        <div class="sw-body" id="hair-pm-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ WEEKLY PROTOCOL</span><button class="sw-action" onclick="editSection('hairWeekly')">EDIT</button></div>
+        <div class="sw-body" id="hair-wk-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ OBSERVATIONS</span></div>
+        <div class="sw-body">
+          <textarea id="hair-notes" placeholder="Shedding level, scalp oiliness, temple changes..." style="min-height:90px;" oninput="S.hairNotes=this.value;save()"></textarea>
+          <div style="margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">Auto-saved. Check temples weekly in consistent lighting.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SKIN ===== -->
+    <div class="tab-pane" id="pane-skin">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ ACTIVE CONCERNS</span></div>
+        <div class="sw-body">
+          <div class="flex fwrap gap6">
+            <span class="badge b-red">Neck pigmentation</span>
+            <span class="badge b-gold">Post-shave marks</span>
+            <span class="badge b-green">Rx routine active</span>
+          </div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ AM ROUTINE</span><button class="sw-action" onclick="editSection('skinAM')">EDIT</button></div>
+        <div class="sw-body" id="skin-am-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ PM ROUTINE</span><button class="sw-action" onclick="editSection('skinPM')">EDIT</button></div>
+        <div class="sw-body" id="skin-pm-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ NECK TONE TRACKER</span></div>
+        <div class="sw-body">
+          <div class="ir"><span class="ir-lbl">Tone level</span>
+            <div class="flex-center gap8">
+              <input type="range" min="1" max="5" value="2" id="neck-tone" step="1" oninput="S.neckTone=+this.value;updNeckTone();save();" style="width:100px;">
+              <span class="ir-val" id="neck-tone-lbl">2 — Dark</span>
+            </div>
+          </div>
+          <div class="info-box" style="margin-top:8px;">SPF every morning — non-negotiable. Niacinamide 10% on neck PM. UV darkens faster than niacinamide lightens.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HYGIENE ===== -->
+    <div class="tab-pane" id="pane-hygiene">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ DAILY HYGIENE</span><button class="sw-action" onclick="editSection('hygDaily')">EDIT</button></div>
+        <div class="sw-body" id="hyg-daily-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ INTIMATE CARE</span><button class="sw-action" onclick="editSection('hygIntimate')">EDIT</button></div>
+        <div class="sw-body" id="hyg-int-list"></div>
+        <div style="padding:0 14px 12px;">
+          <div class="info-box">Antifungal wash (clotrimazole or ketoconazole-based) if symptomatic — apply, leave 2 min, rinse. Dry completely before dressing. Cotton underwear only.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NECK & FACE ===== -->
+    <div class="tab-pane" id="pane-neck">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ NECK TRAINING</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">3–4x per week</span></div>
+        <div class="sw-body" id="neck-ex-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ TECH NECK CORRECTION</span><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);">Daily</span></div>
+        <div class="sw-body" id="neck-posture-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ TONGUE POSTURE / MEWING</span></div>
+        <div class="sw-body">
+          <div id="mewing-list"></div>
+          <div class="info-box mt8">Mewing is a long game — 12–24 months minimum before visible structural change.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ FACIAL HABITS</span></div>
+        <div class="sw-body" id="face-habits-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== SUNDAY ===== -->
+    <div class="tab-pane" id="pane-sunday">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ PELVIC FLOOR SESSION</span><span class="badge b-purple">Sunday</span></div>
+        <div class="sw-body">
+          <div style="font-size:13px;line-height:1.65;color:var(--txt2);">Kegels, reverse kegels, hip bridges, breathwork. Improves ejaculatory control, blood flow, core stability.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ SESSION CHECKLIST</span></div>
+        <div class="sw-body" id="sun-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ LOG SESSION</span></div>
+        <div class="sw-body">
+          <div class="ir">
+            <span class="ir-lbl">Duration</span>
+            <div class="flex-center gap6"><input type="number" id="sun-dur" placeholder="20" style="width:70px;"><span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--txt2);">min</span></div>
+          </div>
+          <div class="ir">
+            <span class="ir-lbl">Control rating</span>
+            <div class="flex gap6" id="sun-rating">
+              <span class="set-chip" onclick="setSunRating(1,this)">1</span>
+              <span class="set-chip" onclick="setSunRating(2,this)">2</span>
+              <span class="set-chip" onclick="setSunRating(3,this)">3</span>
+              <span class="set-chip" onclick="setSunRating(4,this)">4</span>
+              <span class="set-chip" onclick="setSunRating(5,this)">5</span>
+            </div>
+          </div>
+          <div class="mt8"><textarea id="sun-notes" placeholder="Progress notes..." style="min-height:80px;"></textarea></div>
+          <button class="btn btn-pri mt8" style="width:100%;" onclick="logSunday()">LOG SESSION</button>
+        </div>
+      </div>
+      <div id="sun-history"></div>
+    </div>
+
+    <!-- ===== DAILY OPS ===== -->
+    <div class="tab-pane" id="pane-ops">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ DAILY OPERATIONS</span><span id="ops-count" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt3);">0/0 done</span></div>
+        <div class="sw-body" id="ops-list"></div>
+      </div>
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ ADD CUSTOM TASK</span></div>
+        <div class="sw-body">
+          <div class="flex gap8">
+            <input type="text" id="ops-new" placeholder="Add a task..." style="flex:1;">
+            <select id="ops-cat" style="width:110px;">
+              <option value="gym">GYM</option>
+              <option value="nutrition">NUTRITION</option>
+              <option value="hair">HAIR</option>
+              <option value="skin">SKIN</option>
+              <option value="hygiene">HYGIENE</option>
+              <option value="general">GENERAL</option>
+            </select>
+            <button class="btn btn-pri btn-sm" onclick="addOpsTask()">ADD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== JOURNAL ===== -->
+    <div class="tab-pane" id="pane-journal">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ TODAY'S ENTRY</span></div>
+        <div class="sw-body">
+          <div class="flex fwrap gap6 mb8">
+            <button class="btn btn-sec btn-sm" onclick="insertPrompt('How did my body feel today?')">How I felt</button>
+            <button class="btn btn-sec btn-sm" onclick="insertPrompt('What held me back today?')">Obstacle</button>
+            <button class="btn btn-sec btn-sm" onclick="insertPrompt('One win today:')">One win</button>
+            <button class="btn btn-sec btn-sm" onclick="insertPrompt('Mindset note:')">Mindset</button>
+          </div>
+          <textarea id="journal-text" placeholder="This is yours. No filter needed." style="min-height:140px;"></textarea>
+          <div class="flex-between mt8">
+            <div class="flex gap6 fwrap">
+              <span id="md-calm" class="set-chip" onclick="setMood('Calm',this)">Calm</span>
+              <span id="md-strong" class="set-chip" onclick="setMood('Strong',this)">Strong</span>
+              <span id="md-tired" class="set-chip" onclick="setMood('Tired',this)">Tired</span>
+              <span id="md-fired" class="set-chip" onclick="setMood('Fired up',this)">Fired</span>
+              <span id="md-low" class="set-chip" onclick="setMood('Low',this)">Low</span>
+            </div>
+            <button class="btn btn-pri" onclick="saveJournal()">SAVE</button>
+          </div>
+        </div>
+      </div>
+      <div id="journal-entries"></div>
+    </div>
+
+    <!-- ===== HEATMAP ===== -->
+    <div class="tab-pane" id="pane-heatmap">
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ ACTIVITY HEATMAP — 52 WEEKS</span></div>
+        <div class="sw-body">
+          <div id="hm-month-row" class="hm-month-labels"></div>
+          <div class="hm-wrap">
+            <div style="display:flex;flex-direction:column;gap:2px;margin-right:6px;padding-top:0px;">
+              <div class="hm-day-labels" style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--txt3);">
+                <div style="height:10px;"></div>
+                <div style="height:12px;line-height:12px;">M</div>
+                <div style="height:12px;"></div>
+                <div style="height:12px;line-height:12px;">W</div>
+                <div style="height:12px;"></div>
+                <div style="height:12px;line-height:12px;">F</div>
+                <div style="height:12px;"></div>
+              </div>
+            </div>
+            <div id="heatmap-grid" class="heatmap-grid" style="flex:1;"></div>
+          </div>
+          <div class="hm-legend">
+            <span class="hm-legend-lbl">Less</span>
+            <div class="hm-legend-cell hm-0"></div>
+            <div class="hm-legend-cell hm-1"></div>
+            <div class="hm-legend-cell hm-2"></div>
+            <div class="hm-legend-cell hm-3"></div>
+            <div class="hm-legend-cell hm-4"></div>
+            <div class="hm-legend-cell hm-5"></div>
+            <span class="hm-legend-lbl">More</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ LOG ACTIVITY FOR DATE</span></div>
+        <div class="sw-body">
+          <div class="grid2 gap8 mb8">
+            <div><div class="sec-lbl">DATE</div><input type="date" id="hm-date" style="width:100%;"></div>
+            <div><div class="sec-lbl">INTENSITY (0-5)</div>
+              <div class="flex gap6">
+                <span class="set-chip" onclick="setHmInt(0,this)">0</span>
+                <span class="set-chip" onclick="setHmInt(1,this)">1</span>
+                <span class="set-chip" onclick="setHmInt(2,this)">2</span>
+                <span class="set-chip" onclick="setHmInt(3,this)">3</span>
+                <span class="set-chip" onclick="setHmInt(4,this)">4</span>
+                <span class="set-chip" onclick="setHmInt(5,this)">5</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-pri" style="width:100%;" onclick="logHeatmapDay()">LOG DAY</button>
+        </div>
+      </div>
+
+      <div class="sw">
+        <div class="sw-head"><span class="sw-title">◈ STATS</span></div>
+        <div class="sw-body">
+          <div class="mgrid">
+            <div class="mc"><div class="mc-lbl">TOTAL DAYS</div><div class="mc-val" id="hm-total">0</div></div>
+            <div class="mc"><div class="mc-lbl">CURRENT STREAK</div><div class="mc-val" id="hm-cur-streak">0</div></div>
+            <div class="mc"><div class="mc-lbl">BEST STREAK</div><div class="mc-val" id="hm-best">0</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RANK SYSTEM ===== -->
+    <div class="tab-pane" id="pane-rank">
+      <div class="sw" style="margin-bottom:16px;">
+        <div class="sw-head"><span class="sw-title">◈ RANKING SYSTEM</span></div>
+        <div class="sw-body">
+          <div style="font-size:13px;line-height:1.7;color:var(--txt2);">
+            Your rank advances automatically based on your journal streak. Each rank unlocks a new tier of discipline and identity. The higher you climb, the harder the requirements — but the greater the transformation.
+          </div>
+          <div class="exp-wrap mt12">
+            <div class="exp-lbl"><span>RANK PROGRESS</span><span id="rank-prog-txt">—</span></div>
+            <div class="exp-bar"><div class="exp-fill" id="rank-prog-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANK CARDS -->
+      <div class="rank-card" id="rc-S" style="--rank-color:#f59e0b;--rank-rgb:245,158,11;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter">S</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">SHADOW MONARCH</div>
+            <div class="rank-card-req">90+ DAY STREAK</div>
+            <div class="rank-card-desc">The pinnacle. You have become the system. Your consistency is inhuman. Posture, aesthetics, discipline — all operating at apex level. You don't follow the protocol — you are the protocol.</div>
+            <div class="rank-perks">
+              <span class="badge b-gold">MAX DISCIPLINE</span>
+              <span class="badge b-gold">APEX AESTHETIC</span>
+              <span class="badge b-gold">SOVEREIGN CONTROL</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-S" style="width:0%;"></div>
+        </div>
+      </div>
+
+      <div class="rank-card" id="rc-A" style="--rank-color:#f59e0b;--rank-rgb:245,158,11;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter" style="color:#f59e0b;text-shadow:0 0 20px #f59e0b;">A</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">ELITE HUNTER</div>
+            <div class="rank-card-req">60–89 DAY STREAK</div>
+            <div class="rank-card-desc">You've crossed the threshold from discipline to identity. The gym is non-negotiable. The protocols run on autopilot. Your body is visibly transforming and people around you notice.</div>
+            <div class="rank-perks">
+              <span class="badge b-gold">ELITE PHYSIQUE</span>
+              <span class="badge b-blue">AUTO-DISCIPLINE</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-A" style="width:0%;--rank-color:#f59e0b;"></div>
+        </div>
+      </div>
+
+      <div class="rank-card" id="rc-B" style="--rank-color:#38bdf8;--rank-rgb:56,189,248;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter" style="color:#38bdf8;text-shadow:0 0 20px #38bdf8;">B</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">ADVANCED</div>
+            <div class="rank-card-req">30–59 DAY STREAK</div>
+            <div class="rank-card-desc">The protocol is embedded. You don't need motivation — you run on momentum. Physical changes are measurable. Aesthetic habits are second nature.</div>
+            <div class="rank-perks">
+              <span class="badge b-blue">MOMENTUM LOCKED</span>
+              <span class="badge b-cyan">HABIT EMBEDDED</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-B" style="width:0%;--rank-color:#38bdf8;"></div>
+        </div>
+      </div>
+
+      <div class="rank-card" id="rc-C" style="--rank-color:#00f5ff;--rank-rgb:0,245,255;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter" style="color:#00f5ff;text-shadow:0 0 20px #00f5ff;">C</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">ESTABLISHED</div>
+            <div class="rank-card-req">14–29 DAY STREAK</div>
+            <div class="rank-card-desc">You've proven to yourself this isn't just a phase. The two-week barrier is crossed. Consistency is building. Skin, hair, and body are responding to the protocol.</div>
+            <div class="rank-perks">
+              <span class="badge b-cyan">PROTOCOL ACTIVE</span>
+              <span class="badge b-green">BODY RESPONDING</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-C" style="width:0%;--rank-color:#00f5ff;"></div>
+        </div>
+      </div>
+
+      <div class="rank-card" id="rc-D" style="--rank-color:#10b981;--rank-rgb:16,185,129;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter" style="color:#10b981;text-shadow:0 0 20px #10b981;">D</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">REBUILDING</div>
+            <div class="rank-card-req">7–13 DAY STREAK</div>
+            <div class="rank-card-desc">You've made it past the first week. The hardest part — starting — is behind you. Routines are forming. Trust the process and show up again tomorrow.</div>
+            <div class="rank-perks">
+              <span class="badge b-green">FOUNDATION FORMING</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-D" style="width:0%;--rank-color:#10b981;"></div>
+        </div>
+      </div>
+
+      <div class="rank-card" id="rc-E" style="--rank-color:#8b5cf6;--rank-rgb:139,92,246;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="rank-card-letter" style="color:#8b5cf6;text-shadow:0 0 20px #8b5cf6;">E</div>
+          <div style="flex:1;">
+            <div class="rank-card-name">AWAKENING</div>
+            <div class="rank-card-req">0–6 DAY STREAK</div>
+            <div class="rank-card-desc">The journey begins. Every legend started here. Don't judge the start — judge the direction. Open the journal tab, make an entry, and climb.</div>
+            <div class="rank-perks">
+              <span class="badge b-purple">BEGINNING</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;">
+          <div class="rank-progress-fill" id="rp-E" style="width:0%;--rank-color:#8b5cf6;"></div>
+        </div>
+      </div>
+
+      <div class="sw" style="margin-top:16px;">
+        <div class="sw-head"><span class="sw-title">◈ HOW RANKS WORK</span></div>
+        <div class="sw-body">
+          <div class="ir"><span class="ir-lbl">Rank advancement</span><span class="ir-val" style="color:var(--aura);">Journal streak</span></div>
+          <div class="ir"><span class="ir-lbl">Streak resets on</span><span class="ir-val" style="color:var(--ember);">Missed day</span></div>
+          <div class="ir"><span class="ir-lbl">Streak advances on</span><span class="ir-val" style="color:var(--bio);">Journal entry</span></div>
+          <div class="ir"><span class="ir-lbl">Rank S milestone</span><span class="ir-val" style="color:var(--gold2);">90 days</span></div>
+          <div class="info-box" style="margin-top:8px;">One journal entry per day counts as an active day. Missing a day resets your streak to zero. Consistency is everything. The rank system rewards relentlessness.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bnav" id="bnav">
+    <button class="bnav-btn active" data-tab="home"><span class="ic">🏠</span>HOME</button>
+    <button class="bnav-btn" data-tab="status"><span class="ic">⚡</span>STATUS</button>
+    <button class="bnav-btn" data-tab="training"><span class="ic">🏋</span>TRAIN</button>
+    <button class="bnav-btn" data-tab="nutrition"><span class="ic">🍽</span>FUEL</button>
+    <button class="bnav-btn" data-tab="steps"><span class="ic">👟</span>STEPS</button>
+    <button class="bnav-btn" data-tab="hair"><span class="ic">💈</span>HAIR</button>
+    <button class="bnav-btn" data-tab="skin"><span class="ic">✨</span>SKIN</button>
+    <button class="bnav-btn" data-tab="hygiene"><span class="ic">🫧</span>HYGIENE</button>
+    <button class="bnav-btn" data-tab="neck"><span class="ic">🗿</span>FACE</button>
+    <button class="bnav-btn" data-tab="sunday"><span class="ic">🌀</span>SUNDAY</button>
+    <button class="bnav-btn" data-tab="ops"><span class="ic">✅</span>OPS</button>
+    <button class="bnav-btn" data-tab="journal"><span class="ic">📖</span>LOG</button>
+    <button class="bnav-btn" data-tab="heatmap"><span class="ic">🔥</span>HEAT</button>
+    <button class="bnav-btn" data-tab="rank"><span class="ic">🏅</span>RANKS</button>
+  </nav>
+
+</div><!-- end app -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   JARVIS HUD GRID BACKGROUND
+============================================================ */
+(function(){
+  const canvas = document.getElementById('star-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  // Floating data particles
+  const particles = [];
+  function spawnParticle(){
+    return {
+      x: Math.random() * (W||400),
+      y: Math.random() * (H||800),
+      vx: (Math.random()-0.5)*0.3,
+      vy: -Math.random()*0.6-0.1,
+      life: Math.random(),
+      dlife: 0.002+Math.random()*0.003,
+      r: Math.random()*1.8+0.3,
+      type: Math.random()<0.6?'dot':'cross'
+    };
+  }
+  function initParticles(){
+    particles.length=0;
+    for(let i=0;i<80;i++){
+      const p=spawnParticle();
+      p.life=Math.random(); // randomize initial phase
+      particles.push(p);
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t += 0.008;
+
+    const CELL = 52; // grid cell size
+    const cols = Math.ceil(W/CELL)+2;
+    const rows = Math.ceil(H/CELL)+2;
+
+    // --- Perspective grid floor lines ---
+    const horizon = H*0.52;
+    const vp = {x: W*0.5, y: horizon};
+    const numVLines = 22;
+    const spread = W*1.6;
+
+    ctx.save();
+
+    // Horizontal lines (receding into distance)
+    const numH = 18;
+    for(let i=0;i<numH;i++){
+      const progress = (i/numH);
+      const ease = Math.pow(progress, 1.6);
+      const y = horizon + ease*(H - horizon + 60);
+      const alpha = 0.03 + progress*0.07;
+      ctx.strokeStyle = `rgba(0,245,255,${alpha})`;
+      ctx.lineWidth = 0.5 + progress*0.5;
+      ctx.beginPath();
+      ctx.moveTo(0,y);ctx.lineTo(W,y);
+      ctx.stroke();
+    }
+
+    // Vertical lines converging to vanishing point
+    for(let i=0;i<=numVLines;i++){
+      const t_v = i/numVLines;
+      const baseX = -spread/2 + t_v*spread + W/2 - spread/2;
+      const alpha = 0.02 + (1-Math.abs(t_v-0.5)*2)*0.06;
+      ctx.strokeStyle = `rgba(0,245,255,${alpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(vp.x, horizon-10);
+      ctx.lineTo(baseX, H+60);
+      ctx.stroke();
+    }
+
+    // Glow on horizon line
+    const grad = ctx.createLinearGradient(0,horizon,W,horizon);
+    grad.addColorStop(0,'rgba(0,245,255,0)');
+    grad.addColorStop(0.2,'rgba(0,245,255,0.12)');
+    grad.addColorStop(0.5,'rgba(0,245,255,0.28)');
+    grad.addColorStop(0.8,'rgba(0,245,255,0.12)');
+    grad.addColorStop(1,'rgba(0,245,255,0)');
+    ctx.strokeStyle=grad;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,horizon);ctx.lineTo(W,horizon);ctx.stroke();
+
+    ctx.restore();
+
+    // --- Flat top grid (ceiling / overhead HUD) ---
+    const topH = horizon * 0.48;
+    ctx.save();
+    // Horizontal lines top grid
+    const topRows = 8;
+    for(let i=0;i<topRows;i++){
+      const y = (i/topRows)*topH;
+      const alpha = 0.015+(i/topRows)*0.025;
+      ctx.strokeStyle=`rgba(0,245,255,${alpha})`;
+      ctx.lineWidth=0.4;
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+    }
+    // Vertical lines top grid
+    const topCols = Math.ceil(W/CELL);
+    for(let i=0;i<=topCols;i++){
+      const x=i*CELL;
+      const alpha=0.015+(0.5-Math.abs(i/topCols-0.5))*0.04;
+      ctx.strokeStyle=`rgba(0,245,255,${alpha})`;
+      ctx.lineWidth=0.4;
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,topH);ctx.stroke();
+    }
+    ctx.restore();
+
+
+    // --- HUD corner brackets ---
+    function bracket(bx,by,size,dir,alpha){
+      const arm=size*0.38;
+      ctx.strokeStyle=`rgba(0,245,255,${alpha})`;
+      ctx.lineWidth=1.2;
+      ctx.beginPath();
+      const sx=dir[0],sy=dir[1];
+      ctx.moveTo(bx,by+sy*arm);ctx.lineTo(bx,by);ctx.lineTo(bx+sx*arm,by);
+      ctx.stroke();
+    }
+    const bsz=60, ba=0.18;
+    bracket(20,20,bsz,[1,1],ba);
+    bracket(W-20,20,bsz,[-1,1],ba);
+    bracket(20,H-20,bsz,[1,-1],ba);
+    bracket(W-20,H-20,bsz,[-1,-1],ba);
+
+    // --- HUD centre crosshair (subtle) ---
+    const cx2=W/2, cy2=H/2;
+    ctx.strokeStyle='rgba(0,245,255,0.06)';ctx.lineWidth=0.8;
+    ctx.setLineDash([4,8]);
+    ctx.beginPath();ctx.moveTo(cx2-30,cy2);ctx.lineTo(cx2+30,cy2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx2,cy2-30);ctx.lineTo(cx2,cy2+30);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Small arc
+    ctx.strokeStyle='rgba(0,245,255,0.07)';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.arc(cx2,cy2,18,0,Math.PI*2);ctx.stroke();
+
+    // --- Floating data particles ---
+    particles.forEach((p,i)=>{
+      p.life+=p.dlife;p.x+=p.vx;p.y+=p.vy;
+      if(p.life>1||p.y<-10){particles[i]=spawnParticle();particles[i].y=H+10;particles[i].life=0;}
+      const a=Math.sin(p.life*Math.PI)*0.5;
+      ctx.fillStyle=`rgba(0,245,255,${a})`;
+      if(p.type==='dot'){
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      } else {
+        ctx.strokeStyle=`rgba(0,245,255,${a*0.8})`;ctx.lineWidth=0.7;
+        ctx.beginPath();ctx.moveTo(p.x-2,p.y);ctx.lineTo(p.x+2,p.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(p.x,p.y-2);ctx.lineTo(p.x,p.y+2);ctx.stroke();
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize',()=>{resize();initParticles();});
+  resize();initParticles();draw();
+})();
+
+/* ============================================================
+   JARVIS SOUND + LAUNCH
+============================================================ */
+function initiateSequence(){
+  playJarvisSound();
+  setTimeout(()=>{
+    document.getElementById('launch-screen').classList.add('hide');
+    document.getElementById('app').classList.add('visible');
+  },4200);
+  setTimeout(()=>{
+    document.getElementById('launch-screen').style.display='none';
+  },5800);
+}
+
+function playJarvisSound(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+
+    const reverb = ctx.createConvolver();
+    (function buildReverb(){
+      const len = ctx.sampleRate * 2.8;
+      const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for(let c=0;c<2;c++){
+        const d = buf.getChannelData(c);
+        for(let i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 1.6);
+      }
+      reverb.buffer = buf;
+    })();
+
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.0, ctx.currentTime);
+    master.gain.linearRampToValueAtTime(0.72, ctx.currentTime + 0.3);
+    reverb.connect(master);
+    master.connect(ctx.destination);
+
+    // Smooth synth note: sine + triangle blend, routed through reverb
+    function note(freq, t0, dur, vol, detune=0){
+      const o1 = ctx.createOscillator(); // sine — warm fundamental
+      const o2 = ctx.createOscillator(); // triangle — soft harmonic body
+      const o3 = ctx.createOscillator(); // sine sub-octave — depth
+      const g  = ctx.createGain();
+      const lp = ctx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 2400; lp.Q.value = 0.7;
+
+      o1.type='sine';     o1.frequency.value=freq;   o1.detune.value=detune;
+      o2.type='triangle'; o2.frequency.value=freq;   o2.detune.value=detune+7;
+      o3.type='sine';     o3.frequency.value=freq/2; o3.detune.value=detune;
+
+      const g2=ctx.createGain(); g2.gain.value=0.28; // triangle blend
+      const g3=ctx.createGain(); g3.gain.value=0.18; // sub blend
+
+      // Envelope: slow attack, sustain, soft release
+      g.gain.setValueAtTime(0, ctx.currentTime+t0);
+      g.gain.linearRampToValueAtTime(vol, ctx.currentTime+t0+0.18);
+      g.gain.setValueAtTime(vol, ctx.currentTime+t0+dur-0.28);
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime+t0+dur);
+
+      o1.connect(lp); o2.connect(g2); g2.connect(lp);
+      o3.connect(g3); g3.connect(lp);
+      lp.connect(g); g.connect(reverb);
+
+      [o1,o2,o3].forEach(o=>{ o.start(ctx.currentTime+t0); o.stop(ctx.currentTime+t0+dur+0.1); });
+    }
+
+    // Soft pad chord: multiple detuned sines for lush shimmer
+    function pad(freqs, t0, dur, vol){
+      freqs.forEach((f,i)=>{
+        const o=ctx.createOscillator();
+        const g=ctx.createGain();
+        o.type='sine'; o.frequency.value=f; o.detune.value=(i%2===0?-4:4);
+        g.gain.setValueAtTime(0,ctx.currentTime+t0);
+        g.gain.linearRampToValueAtTime(vol/(freqs.length*0.7), ctx.currentTime+t0+0.5);
+        g.gain.setValueAtTime(vol/(freqs.length*0.7), ctx.currentTime+t0+dur-0.5);
+        g.gain.linearRampToValueAtTime(0, ctx.currentTime+t0+dur);
+        o.connect(g); g.connect(reverb);
+        o.start(ctx.currentTime+t0); o.stop(ctx.currentTime+t0+dur+0.1);
+      });
+    }
+
+    // Gentle high shimmer (sparkle)
+    function shimmer(freq, t0, dur, vol){
+      const o=ctx.createOscillator();
+      const g=ctx.createGain();
+      o.type='sine'; o.frequency.value=freq;
+      g.gain.setValueAtTime(0,ctx.currentTime+t0);
+      g.gain.linearRampToValueAtTime(vol,ctx.currentTime+t0+0.08);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t0+dur);
+      o.connect(g); g.connect(reverb);
+      o.start(ctx.currentTime+t0); o.stop(ctx.currentTime+t0+dur+0.05);
+    }
+
+    /* ─────────────────────────────────────────────────
+       SPACE SYNTH MELODY  ~4.5s
+       Key: D minor pentatonic — D, F, G, A, C
+       Frequencies (octave 4): D4=293.7  F4=349.2  G4=392  A4=440  C5=523.3
+       Mood: ethereal, ascending, cinematic opener
+    ───────────────────────────────────────────────── */
+
+    // Deep ambient pad — holds through whole sequence
+    pad([73.4, 110.0, 146.8, 196.0, 220.0], 0.0, 4.6, 0.55); // Dm pad
+
+    // Melody phrase 1 — gentle ascending (0.3s – 2.0s)
+    note(293.7, 0.30, 0.55, 0.22);          // D4
+    note(349.2, 0.82, 0.50, 0.20);          // F4
+    note(392.0, 1.28, 0.48, 0.22);          // G4
+    note(440.0, 1.72, 0.55, 0.24);          // A4
+
+    // Shimmer on top of each note (octave up, very soft)
+    shimmer(587.3, 0.30, 0.4, 0.06);
+    shimmer(698.5, 0.82, 0.38, 0.055);
+    shimmer(784.0, 1.28, 0.36, 0.06);
+    shimmer(880.0, 1.72, 0.42, 0.065);
+
+    // Melody phrase 2 — peak + gentle resolve (2.25s – 4.0s)
+    note(523.3, 2.25, 0.52, 0.22);          // C5  (reach up)
+    note(440.0, 2.74, 0.50, 0.20);          // A4  (step back)
+    note(392.0, 3.20, 0.48, 0.19);          // G4
+    note(293.7, 3.65, 0.75, 0.18);          // D4  (resolve home)
+
+    shimmer(1046.5, 2.25, 0.45, 0.05);
+    shimmer(880.0,  2.74, 0.40, 0.048);
+    shimmer(784.0,  3.20, 0.38, 0.045);
+    shimmer(587.3,  3.65, 0.55, 0.04);
+
+    // Final chord swell — resolves everything (3.9s)
+    pad([146.8, 220.0, 293.7, 349.2, 440.0], 3.90, 1.0, 0.45);
+
+    // Master fade
+    master.gain.setValueAtTime(0.72, ctx.currentTime + 4.0);
+    master.gain.linearRampToValueAtTime(0, ctx.currentTime + 4.8);
+
+  }catch(e){}
+}
+
+/* ============================================================
+   DEFAULT DATA
+============================================================ */
+const DEFAULTS = {
+  weight:69,weightHistory:[],steps:0,water:0,meals:[],gymSets:{},
+  weekDays:[0,0,0,0,0,0,0],streak:0,lastEntryDate:'',
+  macroGoals:{cal:1800,p:150,c:150,f:55},
+  supplements:[
+    {name:'Whey Protein',dose:'1 scoop (25g)',timing:'Post-workout',done:false},
+    {name:'Creatine Monohydrate',dose:'5g',timing:'Any time daily',done:false},
+    {name:'Omega-3',dose:'2 caps / 1g EPA+DHA',timing:'With meal',done:false}
+  ],
+  workouts:{
+    0:{name:'Push — Upper Chest Focus',badge:'PUSH',exs:[
+      {n:'Incline Barbell Press',sets:4,tag:'pri'},{n:'Incline Dumbbell Fly',sets:3,tag:'pri'},
+      {n:'Cable Crossover High→Low',sets:3,tag:'pri'},{n:'Overhead Tricep Extension',sets:4,tag:'pri'},
+      {n:'Tricep Pushdown',sets:3,tag:'pri'},{n:'Face Pull',sets:3,tag:'pos'}
+    ]},
+    1:{name:'Pull — V-Taper',badge:'PULL',exs:[
+      {n:'Wide-Grip Lat Pulldown',sets:4,tag:'pri'},{n:'Seated Cable Row',sets:3,tag:'pri'},
+      {n:'Single-Arm DB Row',sets:3,tag:'pri'},{n:'Rear Delt Fly',sets:3,tag:'pos'},
+      {n:'Band Pull-Apart',sets:3,tag:'pos'}
+    ]},
+    2:{name:'Core + Posture',badge:'CORE',exs:[
+      {n:'Dead Bug',sets:3,tag:'cor'},{n:'Hollow Body Hold',sets:3,tag:'cor'},
+      {n:'McGill Curl-up',sets:3,tag:'cor'},{n:'Hip Thrust — APT Fix',sets:3,tag:'pos'},
+      {n:'Thoracic Extension on Roller',sets:3,tag:'pos'}
+    ]},
+    3:{name:'Push — Shoulders',badge:'PUSH',exs:[
+      {n:'Seated DB Shoulder Press',sets:4,tag:'pri'},{n:'Lateral Raises',sets:4,tag:'pri'},
+      {n:'Rear Delt Machine',sets:3,tag:'pos'},{n:'Overhead Tricep Extension',sets:3,tag:'pri'},
+      {n:'Dips',sets:3,tag:'pri'}
+    ]},
+    4:{name:'Pull — Back Thickness',badge:'PULL',exs:[
+      {n:'Deadlift (moderate)',sets:3,tag:'pri'},{n:'Chest Supported Row',sets:4,tag:'pri'},
+      {n:'Cable Pullover',sets:3,tag:'pri'},{n:'Face Pull',sets:3,tag:'pos'}
+    ]},
+    5:{name:'Legs + Core',badge:'LEGS',exs:[
+      {n:'Goblet Squat',sets:4,tag:'cor'},{n:'Romanian Deadlift',sets:3,tag:'pri'},
+      {n:'Leg Press',sets:3,tag:'pri'},{n:'Plank Hold',sets:3,tag:'cor'}
+    ]},
+    6:{name:'Sunday — Pelvic + Rest',badge:'REST',exs:[]}
+  },
+  postureCks:{},
+  hairMorning:['Gentle seb derm shampoo (ketoconazole 2%) — leave 5 min, rinse','Light scalp massage post-wash (2 min circular)','Moisturising hair milk or leave-in — avoid scalp'],
+  hairNight:['Dry scalp thoroughly before sleep','Check temple corners in mirror — note any changes'],
+  hairWeekly:['Deep conditioning mask on lengths','Check shedding count on comb','Take hairline photo same angle/lighting for comparison'],
+  hairCks:{},hairNotes:'',
+  skinAM:['Gentle cleanser (face + neck)','Prescribed treatment (as directed by dermatologist)','Moisturiser','SPF 30+ — face AND neck (non-negotiable)'],
+  skinPM:['Oil cleanser then water cleanser','Prescribed active (tretinoin / azelaic acid)','Niacinamide 10% serum — neck focus','Night moisturiser / barrier cream'],
+  skinCks:{},neckTone:2,
+  hygDaily:['Shower lukewarm (not hot — hot strips skin barrier)','Antibacterial soap: underarms, groin, back','Deodorant / antiperspirant after dry','Fresh cotton underwear daily','Brush teeth x2 + tongue scraper','Floss'],
+  hygIntimate:['Gentle rinse genital area (water only or pH-balanced wash)','Antifungal wash if symptomatic — leave 2 min, rinse completely','Pat dry completely — moisture causes fungal growth','Clean underwear, loose fit preferred'],
+  hygCks:{},sunCks:{},
+  opsTasks:[
+    {text:'Morning hair protocol',cat:'hair',done:false},
+    {text:'Skin AM routine + SPF',cat:'skin',done:false},
+    {text:'Gym session',cat:'gym',done:false},
+    {text:'Hit protein goal (150g)',cat:'nutrition',done:false},
+    {text:'3L water',cat:'nutrition',done:false},
+    {text:'Supplements (whey + creatine + omega-3)',cat:'nutrition',done:false},
+    {text:'10,000 steps',cat:'gym',done:false},
+    {text:'Hourly chin tucks',cat:'gym',done:false},
+    {text:'Tongue posture check',cat:'skin',done:false},
+    {text:'Skin PM routine',cat:'skin',done:false},
+    {text:'Night hair protocol',cat:'hair',done:false},
+    {text:'Intimate hygiene check',cat:'hygiene',done:false},
+    {text:'Journal entry',cat:'general',done:false}
+  ],
+  journalEntries:[],currentMood:'',sundayRating:0,sunSessions:[],
+  heatmapData:{},hmIntensity:0
+};
+
+const POSTURE_DEFAULT=['Chin tucks — 10 reps every hour','Wall angel before every session (2×10)','Check pelvic tilt: neutral spine, no forward tilt'];
+const NECK_EX=[
+  {n:'Neck flexion (chin to chest)',sets:'3×15',note:'Slow, controlled, feel the stretch at back'},
+  {n:'Neck extension (head back)',sets:'3×15',note:"Don't compress — smooth arc only"},
+  {n:'Lateral neck flexion (ear to shoulder)',sets:'3×12 each',note:'Hold 2 sec at end range'},
+  {n:'Neck rotation (L+R)',sets:'3×15 each',note:'Full range, no jerking'},
+  {n:'Resistance neck curl (plate on forehead)',sets:'3×12',note:'Light weight — neck is sensitive'},
+  {n:'Shoulder shrugs + rolls',sets:'3×15',note:'Releases upper trap tension (tech neck)'},
+];
+const NECK_POSTURE=['10 chin tucks every hour at screen — pull chin straight back','Screen at eye level — no downward neck angle','20-20-20 rule — every 20 min look 20 ft away for 20 sec','Back of head touches wall + chin tuck hold — 30 sec, 5x daily','No phone in bed at angle — hold it at face level'];
+const MEWING=['Full tongue on roof of mouth — flat, not tip-only','Back third of tongue engaged — the hardest part to get right','Teeth lightly together or 1–2mm apart — not clenched','Lips sealed, breathing through nose only','Hold this all day — make it unconscious habit','Hard chew daily (mastic gum, raw vegetables) — bilateral chewing','Swallow with tongue on roof — no lip or cheek suction'];
+const FACE_HABITS=['Nasal breathing 24/7 — tape mouth at night if needed','No forward head posture while eating — sit upright','Chew each side equally — no dominant side','No cheek resting on hand (asymmetric force)','Sleep on back when possible — face compression slows remodelling'];
+const SUN_ITEMS=['Kegels — 3 sets × 10 reps × 5 sec hold','Reverse kegels — 3 × 10 (relax and push out)','Hip bridges — 3 × 15 (squeeze at top)','360 diaphragmatic breathing — 5 min','Deep belly breathing + pelvic floor release — 5 min','Light hip flexor stretch + cooldown'];
+const TIPS=['Posture is destroying your visual more than fat is. Every hour: chin tucks. Your stomach protrudes partly because of pelvic tilt — not just fat.','150g protein non-negotiable. Without it your muscles cannot rebuild regardless of how hard you train.','Mewing is a 24/7 habit, not a session. Tongue up right now.','10,000 steps burns 350+ kcal daily with zero recovery cost. The most powerful fat-loss tool you have.','Upper chest is your #1 physique visual. Lead EVERY push session with incline — always first, never last.','Apply minoxidil with full dose consistency once prescribed. Two missed days resets progress more than people realise.','SPF every morning. Niacinamide every night on neck. UV darkens faster than treatment lightens.','Creatine and protein work while you sleep. Do not skip them on rest days.','Nasal breathing during the day = jaw development, better sleep, lower cortisol. Mouth breathe and you lose on all three.','Compound lifts build the frame. Lateral raises, face pulls, and rear delts build the aesthetic. Do both.'];
+
+/* ============================================================
+   STATE
+============================================================ */
+let S = JSON.parse(localStorage.getItem('morphiq2026')||localStorage.getItem('ggs2026')||'null')||JSON.parse(JSON.stringify(DEFAULTS));
+if(!S.heatmapData)S.heatmapData={};
+if(!S.hmIntensity)S.hmIntensity=0;
+function save(){try{localStorage.setItem('morphiq2026',JSON.stringify(S));}catch(e){}}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* ============================================================
+   TABS
+============================================================ */
+function showTab(tab){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-pane').forEach(p=>{
+    p.classList.remove('active');
+  });
+  const pane = document.getElementById('pane-'+tab);
+  if(pane){
+    pane.classList.add('active');
+    document.getElementById('main').scrollTop=0;
+  }
+  if(tab==='heatmap')renderHeatmap();
+  if(tab==='rank')renderRankPage();
+  if(tab==='home')updateHomeStats();
+}
+document.getElementById('bnav').addEventListener('click',e=>{
+  const btn = e.target.closest('.bnav-btn');
+  if(!btn) return;
+  showTab(btn.dataset.tab);
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+function init(){
+  const now = new Date();
+  const opts = {weekday:'short',day:'numeric',month:'short',year:'numeric'};
+  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en-IN',opts);
+  document.getElementById('home-date-full').textContent = now.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+  updStreak(now);
+  updRank();
+  updOv();
+  renderWkBars();
+  renderWO(now.getDay());
+  renderSuppList();
+  renderMacros();
+  renderMeals();
+  updStepsUI();
+  updWaterUI();
+  renderChecklist('hair-am-list',S.hairMorning,'hairCks','am');
+  renderChecklist('hair-pm-list',S.hairNight,'hairCks','pm');
+  renderChecklist('hair-wk-list',S.hairWeekly,'hairCks','wk');
+  renderChecklist('skin-am-list',S.skinAM,'skinCks','am');
+  renderChecklist('skin-pm-list',S.skinPM,'skinCks','pm');
+  renderChecklist('hyg-daily-list',S.hygDaily,'hygCks','d');
+  renderChecklist('hyg-int-list',S.hygIntimate,'hygCks','i');
+  renderStaticList('neck-ex-list',NECK_EX.map(e=>`<b style="font-size:14px;color:var(--txt);">${e.n}</b> <span style="color:var(--aura);font-family:'Share Tech Mono',monospace;font-size:12px;">${e.sets}</span><br><span style="font-size:12px;color:var(--txt3);">${e.note}</span>`));
+  renderStaticCheckCks('neck-posture-list',NECK_POSTURE,'postCks');
+  renderStaticCheckCks('mewing-list',MEWING,'mewCks');
+  renderStaticCheckCks('face-habits-list',FACE_HABITS,'faceCks');
+  renderChecklist('sun-list',SUN_ITEMS,'sunCks','s');
+  renderOps();
+  renderJournal();
+  renderSunHistory();
+  if(S.hairNotes)document.getElementById('hair-notes').value=S.hairNotes;
+  const nt=document.getElementById('neck-tone');if(nt)nt.value=S.neckTone||2;
+  updNeckTone();
+  document.getElementById('daily-focus').textContent=TIPS[Math.floor(now.getDate()+now.getMonth()*30)%TIPS.length];
+  updateHomeStats();
+
+  // set heatmap date to today
+  const todayStr=now.toISOString().slice(0,10);
+  const hd=document.getElementById('hm-date');
+  if(hd)hd.value=todayStr;
+
+  // Reset daily items if new day
+  const today=now.toDateString();
+  if(S.lastResetDay!==today){
+    S.lastResetDay=today;
+    S.meals=[];S.water=0;S.steps=0;S.gymSets={};S.postureCks={};
+    Object.keys(S.hairCks).forEach(k=>{if(!k.startsWith('wk'))delete S.hairCks[k];});
+    S.skinCks={};S.hygCks={};S.sunCks={};
+    S.opsTasks.forEach(t=>t.done=false);
+    S.supplements.forEach(s=>s.done=false);
+    save();
+    renderMeals();updStepsUI();updWaterUI();renderSuppList();renderOps();
+    renderChecklist('hair-am-list',S.hairMorning,'hairCks','am');
+    renderChecklist('hair-pm-list',S.hairNight,'hairCks','pm');
+    renderChecklist('skin-am-list',S.skinAM,'skinCks','am');
+    renderChecklist('skin-pm-list',S.skinPM,'skinCks','pm');
+    renderChecklist('hyg-daily-list',S.hygDaily,'hygCks','d');
+    renderChecklist('hyg-int-list',S.hygIntimate,'hygCks','i');
+    renderChecklist('sun-list',SUN_ITEMS,'sunCks','s');
+  }
+
+  // prefill launch screen stats
+  document.getElementById('ls-rank').textContent=document.getElementById('rank-letter').textContent;
+  document.getElementById('ls-streak').textContent=S.streak||0;
+  const done2=S.opsTasks?S.opsTasks.filter(t=>t.done).length:0;
+  const total2=S.opsTasks?S.opsTasks.length:0;
+  document.getElementById('ls-ops').textContent=total2>0?Math.round((done2/total2)*100)+'%':'0%';
+}
+
+function updateHomeStats(){
+  document.getElementById('hs-streak').textContent=S.streak||0;
+  document.getElementById('hs-rank').textContent=document.getElementById('rank-letter').textContent;
+  document.getElementById('hs-weight').textContent=S.weight||69;
+  const done=S.opsTasks?S.opsTasks.filter(t=>t.done).length:0;
+  const total=S.opsTasks?S.opsTasks.length:0;
+  document.getElementById('hs-ops').textContent=total>0?Math.round((done/total)*100)+'%':'0%';
+  const xptxt=document.getElementById('xp-txt-home');
+  const xpbar=document.getElementById('xp-bar-home');
+  if(xptxt)xptxt.textContent=`${done} / ${total}`;
+  if(xpbar)xpbar.style.width=total>0?Math.round((done/total)*100)+'%':'0%';
+}
+
+function updStreak(now){
+  const today=now.toDateString();
+  if(S.lastEntryDate&&S.lastEntryDate!==today){
+    const diff=(new Date(today)-new Date(S.lastEntryDate))/(1000*60*60*24);
+    if(diff>1)S.streak=0;
+  }
+  document.getElementById('streak-disp').textContent=`${S.streak||0} DAY STREAK`;
+}
+
+function updRank(){
+  const s=S.streak||0;
+  let r='E',n='AWAKENING';
+  if(s>=90){r='S';n='SHADOW MONARCH';}
+  else if(s>=60){r='A';n='ELITE HUNTER';}
+  else if(s>=30){r='B';n='ADVANCED';}
+  else if(s>=14){r='C';n='ESTABLISHED';}
+  else if(s>=7){r='D';n='REBUILDING';}
+  document.getElementById('rank-letter').textContent=r;
+  document.getElementById('rank-name').textContent=n;
+  const colors={S:'var(--gold2)',A:'var(--gold)',B:'var(--plasma)',C:'var(--aura)',D:'var(--bio)',E:'#8b5cf6'};
+  document.getElementById('rank-letter').style.color=colors[r];
+  document.getElementById('rank-letter').style.textShadow=`0 0 20px ${colors[r]}`;
+}
+
+/* ============================================================
+   OVERVIEW
+============================================================ */
+function updOv(){
+  document.getElementById('ov-wt').textContent=S.weight||69;
+  document.getElementById('ov-stp').textContent=((S.steps||0)/1000).toFixed(1);
+  const g=S.macroGoals||{cal:1800};
+  const used=S.meals.reduce((a,m)=>a+(m.cal||0),0);
+  document.getElementById('ov-cal').textContent=Math.max(0,g.cal-used);
+  const done=S.opsTasks?S.opsTasks.filter(t=>t.done).length:0;
+  const total=S.opsTasks?S.opsTasks.length:0;
+  document.getElementById('xp-txt').textContent=`${done} / ${total}`;
+  document.getElementById('xp-bar').style.width=total>0?Math.round((done/total)*100)+'%':'0%';
+  const g2=S.macroGoals||{p:150,c:150,f:55,cal:1800};
+  const cp=S.meals.reduce((a,m)=>a+(m.p||0),0);
+  const cc=S.meals.reduce((a,m)=>a+(m.c||0),0);
+  const cf=S.meals.reduce((a,m)=>a+(m.f||0),0);
+  document.getElementById('ov-stats').innerHTML=`
+    <div class="stat-row"><span class="stat-lbl">PROTEIN</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${Math.min(100,(cp/g2.p)*100)}%;background:linear-gradient(90deg,var(--aura2),var(--plasma));"></div></div><span class="stat-val">${Math.round(cp)}/${g2.p}g</span></div>
+    <div class="stat-row"><span class="stat-lbl">WATER</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${Math.min(100,((S.water||0)/3000)*100)}%;background:linear-gradient(90deg,var(--plasma),var(--aura));"></div></div><span class="stat-val">${S.water||0}/3000ml</span></div>
+    <div class="stat-row"><span class="stat-lbl">STEPS</span><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${Math.min(100,((S.steps||0)/10000)*100)}%;background:linear-gradient(90deg,var(--aura),var(--aura3));"></div></div><span class="stat-val">${(S.steps||0).toLocaleString()}/10k</span></div>`;
+  updateHomeStats();
+}
+
+function renderWkBars(){
+  const days=S.weekDays||[0,0,0,0,0,0,0];
+  ['wkbar','wkbar-home'].forEach(id=>{
+    const wb=document.getElementById(id);
+    if(wb)wb.innerHTML=days.map(d=>`<div class="wkday"><div class="wkday-dot${d?' on':''}"></div></div>`).join('');
+  });
+}
+
+function logWeight(){
+  const v=parseFloat(document.getElementById('wt-inp').value);
+  if(!v||v<20||v>300)return;
+  S.weight=v;
+  if(!S.weightHistory)S.weightHistory=[];
+  S.weightHistory.push({v,d:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'})});
+  S.weightHistory=S.weightHistory.slice(-10);
+  document.getElementById('wt-inp').value='';
+  const wh=document.getElementById('wt-history');
+  if(S.weightHistory.length>1){
+    const last=S.weightHistory.slice(-3);
+    wh.innerHTML=`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt3);margin-top:4px;">Recent: `+last.map(w=>`${w.d}: ${w.v}kg`).join(' → ')+'</div>';
+  }
+  updOv();save();toast('[WEIGHT UPDATED]');
+}
+
+/* ============================================================
+   TRAINING
+============================================================ */
+function renderWO(day){
+  const wo=S.workouts[day]||S.workouts[0];
+  document.getElementById('wo-day-title').textContent=`◈ ${wo.name.toUpperCase()}`;
+  const badge=document.getElementById('wo-day-badge');badge.textContent=wo.badge;
+  const tagClass={pri:'b-red',pos:'b-green',cor:'b-cyan'};
+  const tagLabel={pri:'PRIORITY',pos:'POSTURE',cor:'CORE'};
+  const body=document.getElementById('wo-body');
+  if(day===6||!wo.exs.length){body.innerHTML='<div style="text-align:center;padding:2rem 0;color:var(--txt3);font-family:\'Share Tech Mono\',monospace;font-size:13px;">Sunday — pelvic floor + rest. See Sunday tab.</div>';return;}
+  body.innerHTML=wo.exs.map((ex,ei)=>{
+    const chips=Array.from({length:ex.sets},(_,si)=>{
+      const k=`${day}-${ei}-${si}`;const on=S.gymSets&&S.gymSets[k];
+      return `<span class="set-chip${on?' done':''}" onclick="togSet('${day}','${ei}','${si}',this)">S${si+1}</span>`;
+    }).join('');
+    return `<div style="padding:10px 0;border-bottom:1px solid rgba(0,245,255,0.06);"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:14px;font-weight:600;color:var(--txt);">${ex.n}</span><span class="badge ${tagClass[ex.tag]||'b-blue'}">${tagLabel[ex.tag]||''}</span></div><div class="flex gap6 fwrap">${chips}</div></div>`;
+  }).join('');
+  const pl=document.getElementById('posture-list');pl.innerHTML='';
+  POSTURE_DEFAULT.forEach((item,i)=>{
+    const on=S.postureCks&&S.postureCks[i];
+    const d=document.createElement('div');d.className='ci'+(on?' done':'');
+    d.innerHTML=`<div class="cb${on?' on':''}" onclick="togPosture(${i},this)"><div class="cb-tick"></div></div><div class="ci-text">${item}</div>`;
+    pl.appendChild(d);
+  });
+}
+
+function togSet(day,ei,si,el){
+  const k=`${day}-${ei}-${si}`;if(!S.gymSets)S.gymSets={};
+  S.gymSets[k]=!S.gymSets[k];el.classList.toggle('done');save();
+}
+function togPosture(i,el){
+  if(!S.postureCks)S.postureCks={};S.postureCks[i]=!S.postureCks[i];
+  el.classList.toggle('on');el.closest('.ci').classList.toggle('done');
+  el.querySelector('.cb-tick').style.display=S.postureCks[i]?'block':'none';save();
+}
+function openWOEditor(){
+  const day=new Date().getDay();const wo=S.workouts[day];
+  let html=`<div class="modal-title">EDIT — ${wo.name}</div>
+    <div class="sec-lbl">SESSION NAME</div>
+    <input type="text" id="wo-name-edit" value="${wo.name}" style="margin-bottom:12px;">
+    <div class="sec-lbl">EXERCISES</div>
+    <div id="wo-ex-edit">${wo.exs.map((ex,i)=>`
+      <div id="wex-${i}" style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+        <input type="text" value="${ex.n}" id="wen-${i}" style="flex:1;font-size:13px;">
+        <input type="number" value="${ex.sets}" id="wes-${i}" style="width:50px;" min="1" max="10">
+        <select id="wet-${i}" style="width:70px;font-size:11px;">
+          <option value="pri"${ex.tag==='pri'?' selected':''}>PRIO</option>
+          <option value="pos"${ex.tag==='pos'?' selected':''}>POST</option>
+          <option value="cor"${ex.tag==='cor'?' selected':''}>CORE</option>
+        </select>
+        <button class="btn-danger" onclick="rmEx(${day},${i})">✕</button>
+      </div>`).join('')}
+    </div>
+    <button class="btn btn-sec btn-sm mt8" onclick="addEx(${day})">+ ADD</button>
+    <div class="flex gap8 mt12"><button class="btn btn-sec" style="flex:1;" onclick="closeModal()">CANCEL</button><button class="btn btn-pri" style="flex:1;" onclick="saveWO(${day})">SAVE</button></div>`;
+  openModal(html);
+}
+function addEx(day){S.workouts[day].exs.push({n:'New Exercise',sets:3,tag:'pri'});save();openWOEditor();}
+function rmEx(day,i){S.workouts[day].exs.splice(i,1);save();openWOEditor();}
+function saveWO(day){
+  const wo=S.workouts[day];
+  const nameEl=document.getElementById('wo-name-edit');if(nameEl)wo.name=nameEl.value||wo.name;
+  wo.exs.forEach((_,i)=>{
+    const n=document.getElementById(`wen-${i}`);const s=document.getElementById(`wes-${i}`);const t=document.getElementById(`wet-${i}`);
+    if(n)wo.exs[i].n=n.value||wo.exs[i].n;
+    if(s)wo.exs[i].sets=parseInt(s.value)||wo.exs[i].sets;
+    if(t)wo.exs[i].tag=t.value||wo.exs[i].tag;
+  });
+  save();closeModal();renderWO(day);toast('[WORKOUT SAVED]');
+}
+
+/* ============================================================
+   NUTRITION
+============================================================ */
+function renderMacros(){
+  const g=S.macroGoals||{cal:1800,p:150,c:150,f:55};
+  const used=S.meals.reduce((a,m)=>a+(m.cal||0),0);
+  const cp=S.meals.reduce((a,m)=>a+(m.p||0),0);
+  const cc=S.meals.reduce((a,m)=>a+(m.c||0),0);
+  const cf=S.meals.reduce((a,m)=>a+(m.f||0),0);
+  const calRem=document.getElementById('cal-rem');if(calRem)calRem.textContent=Math.max(0,g.cal-used);
+  const cgd=document.getElementById('cal-goal-disp');if(cgd)cgd.textContent=`${g.cal} kcal`;
+  const pb=document.getElementById('p-bar');if(pb)pb.style.width=Math.min(100,(cp/g.p)*100)+'%';
+  const cb2=document.getElementById('c-bar');if(cb2)cb2.style.width=Math.min(100,(cc/g.c)*100)+'%';
+  const fb=document.getElementById('f-bar');if(fb)fb.style.width=Math.min(100,(cf/g.f)*100)+'%';
+  ['p','c','f'].forEach(m=>{
+    const cur=document.getElementById(`${m}-cur`);const goa=document.getElementById(`${m}-goal`);
+    if(cur)cur.textContent=Math.round(m==='p'?cp:m==='c'?cc:cf);
+    if(goa)goa.textContent=g[m];
+  });
+}
+function logMeal(){
+  const n=document.getElementById('m-name').value.trim()||'Meal';
+  const cal=parseFloat(document.getElementById('m-cal').value)||0;
+  const p=parseFloat(document.getElementById('m-p').value)||0;
+  const c2=parseFloat(document.getElementById('m-c').value)||0;
+  const f=parseFloat(document.getElementById('m-f').value)||0;
+  S.meals.push({n,cal,p,c:c2,f});
+  ['m-name','m-cal','m-p','m-c','m-f'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderMacros();renderMeals();updOv();save();toast('[MEAL LOGGED]');
+}
+function renderMeals(){
+  const wrap=document.getElementById('meal-log-wrap');if(!wrap)return;
+  if(!S.meals||!S.meals.length){wrap.innerHTML='';return;}
+  wrap.innerHTML=`<div class="sw"><div class="sw-head"><span class="sw-title">◈ MEAL LOG</span><button class="sw-action" onclick="S.meals=[];renderMeals();renderMacros();updOv();save();">CLEAR</button></div><div class="sw-body">`+
+    S.meals.map((m,i)=>`<div class="ir"><div><div style="font-size:13.5px;font-weight:600;">${m.n}</div><div style="font-size:11px;color:var(--txt3);font-family:'Share Tech Mono',monospace;">${m.cal}kcal · P:${m.p}g · C:${m.c}g · F:${m.f}g</div></div><button class="btn-danger" onclick="rmMeal(${i})">✕</button></div>`).join('')+
+  '</div></div>';
+}
+function rmMeal(i){S.meals.splice(i,1);renderMacros();renderMeals();updOv();save();}
+function openMacroGoals(){
+  const g=S.macroGoals||{cal:1800,p:150,c:150,f:55};
+  openModal(`<div class="modal-title">EDIT MACRO GOALS</div>
+    <div class="grid2 gap8">
+      <div><div class="sec-lbl">CALORIES</div><input type="number" id="g-cal" value="${g.cal}"></div>
+      <div><div class="sec-lbl">PROTEIN (g)</div><input type="number" id="g-p" value="${g.p}"></div>
+      <div><div class="sec-lbl">CARBS (g)</div><input type="number" id="g-c" value="${g.c}"></div>
+      <div><div class="sec-lbl">FATS (g)</div><input type="number" id="g-f" value="${g.f}"></div>
+    </div>
+    <div class="flex gap8 mt12"><button class="btn btn-sec" style="flex:1;" onclick="closeModal()">CANCEL</button><button class="btn btn-pri" style="flex:1;" onclick="saveMacroGoals()">SAVE</button></div>`);
+}
+function saveMacroGoals(){
+  S.macroGoals={cal:+document.getElementById('g-cal').value||1800,p:+document.getElementById('g-p').value||150,c:+document.getElementById('g-c').value||150,f:+document.getElementById('g-f').value||55};
+  save();closeModal();renderMacros();toast('[GOALS UPDATED]');
+}
+function addWater(ml){S.water=(S.water||0)+ml;updWaterUI();updOv();save();toast(`[+${ml}ml]`);}
+function resetWater(){S.water=0;updWaterUI();updOv();save();}
+function updWaterUI(){
+  const w=S.water||0;
+  const wd=document.getElementById('water-disp');if(wd)wd.textContent=w;
+  const wb=document.getElementById('water-bar');if(wb)wb.style.width=Math.min(100,(w/3000)*100)+'%';
+}
+function renderSuppList(){
+  const el=document.getElementById('supp-list');if(!el)return;
+  el.innerHTML=S.supplements.map((s,i)=>`<div class="ir">
+    <div>
+      <div style="font-size:13.5px;font-weight:600;${s.done?'color:var(--txt3);text-decoration:line-through;':''}">${s.name}</div>
+      <div style="font-size:11px;color:var(--txt3);font-family:'Share Tech Mono',monospace;">${s.dose} · ${s.timing}</div>
+    </div>
+    <div class="cb${s.done?' on':''}" onclick="togSupp(${i},this)"><div class="cb-tick"></div></div>
+  </div>`).join('');
+}
+function togSupp(i,el){
+  S.supplements[i].done=!S.supplements[i].done;el.classList.toggle('on');
+  el.querySelector('.cb-tick').style.display=S.supplements[i].done?'block':'none';
+  renderSuppList();save();
+}
+function openSuppEditor(){
+  openModal(`<div class="modal-title">EDIT SUPPLEMENTS</div>
+    ${S.supplements.map((s,i)=>`<div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
+      <input type="text" id="sn-${i}" value="${s.name}" placeholder="Name" style="flex:1;font-size:12px;">
+      <input type="text" id="sd-${i}" value="${s.dose}" placeholder="Dose" style="width:90px;font-size:12px;">
+      <button class="btn-danger" onclick="rmSupp(${i})">✕</button>
+    </div>`).join('')}
+    <button class="btn btn-sec btn-sm mt8" onclick="addSupp()">+ ADD</button>
+    <div class="flex gap8 mt12"><button class="btn btn-sec" style="flex:1;" onclick="closeModal()">CANCEL</button><button class="btn btn-pri" style="flex:1;" onclick="saveSupps()">SAVE</button></div>`);
+}
+function rmSupp(i){S.supplements.splice(i,1);save();openSuppEditor();}
+function addSupp(){S.supplements.push({name:'New Supplement',dose:'—',timing:'Daily',done:false});save();openSuppEditor();}
+function saveSupps(){
+  S.supplements.forEach((_,i)=>{
+    const n=document.getElementById(`sn-${i}`);const d=document.getElementById(`sd-${i}`);
+    if(n)S.supplements[i].name=n.value;if(d)S.supplements[i].dose=d.value;
+  });
+  save();closeModal();renderSuppList();toast('[SUPPLEMENTS SAVED]');
+}
+
+/* ============================================================
+   STEPS
+============================================================ */
+function updateSteps(){const v=parseInt(document.getElementById('steps-inp').value);if(!isNaN(v)&&v>=0){S.steps=v;document.getElementById('steps-inp').value='';updStepsUI();updOv();save();toast('[STEPS UPDATED]');}}
+function addSteps(n){S.steps=(S.steps||0)+n;updStepsUI();updOv();save();toast(`[+${n} STEPS]`);}
+function updStepsUI(){
+  const s=S.steps||0;
+  const sn=document.getElementById('steps-num');if(sn)sn.textContent=s.toLocaleString();
+  const sb=document.getElementById('steps-bar');if(sb)sb.style.width=Math.min(100,(s/10000)*100)+'%';
+}
+
+/* ============================================================
+   NECK TONE
+============================================================ */
+function updNeckTone(){
+  const v=S.neckTone||2;
+  const labels={1:'Very Light',2:'Dark',3:'Visible',4:'Moderate',5:'Cleared'};
+  const el=document.getElementById('neck-tone-lbl');if(el)el.textContent=`${v} — ${labels[v]}`;
+}
+
+/* ============================================================
+   CHECKLIST
+============================================================ */
+function renderChecklist(elId,items,skey,prefix){
+  const el=document.getElementById(elId);if(!el)return;
+  if(!S[skey])S[skey]={};
+  el.innerHTML=items.map((item,i)=>{
+    const k=prefix+i;const on=S[skey][k];
+    return `<div class="ci${on?' done':''}" id="${elId}-${i}">
+      <div class="cb${on?' on':''}" onclick="togCk('${skey}','${k}','${elId}',${i},this)"><div class="cb-tick"></div></div>
+      <div class="ci-text">${item}</div>
+    </div>`;
+  }).join('');
+}
+function togCk(skey,k,elId,i,el){
+  if(!S[skey])S[skey]={};S[skey][k]=!S[skey][k];
+  el.classList.toggle('on');const row=document.getElementById(`${elId}-${i}`);
+  if(row)row.classList.toggle('done');
+  el.querySelector('.cb-tick').style.display=S[skey][k]?'block':'none';save();
+}
+function renderStaticList(elId,items){
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=items.map(item=>`<div style="padding:10px 0;border-bottom:1px solid rgba(0,245,255,0.06);font-size:13.5px;line-height:1.6;color:var(--txt);">${item}</div>`).join('');
+}
+function renderStaticCheckCks(elId,items,skey){
+  const el=document.getElementById(elId);if(!el)return;
+  if(!S[skey])S[skey]={};
+  el.innerHTML=items.map((item,i)=>{const on=S[skey][i];return `<div class="ci${on?' done':''}">
+    <div class="cb${on?' on':''}" onclick="togStatCk('${skey}',${i},this)"><div class="cb-tick"></div></div>
+    <div class="ci-text">${item}</div>
+  </div>`;}).join('');
+}
+function togStatCk(skey,i,el){
+  if(!S[skey])S[skey]={};S[skey][i]=!S[skey][i];
+  el.classList.toggle('on');el.closest('.ci').classList.toggle('done');
+  el.querySelector('.cb-tick').style.display=S[skey][i]?'block':'none';save();
+}
+
+/* ============================================================
+   EDIT SECTION
+============================================================ */
+function editSection(key){
+  const labels={hairMorning:'HAIR MORNING',hairNight:'HAIR NIGHT',hairWeekly:'HAIR WEEKLY',skinAM:'SKIN AM',skinPM:'SKIN PM',hygDaily:'DAILY HYGIENE',hygIntimate:'INTIMATE CARE'};
+  const items=S[key]||[];
+  openModal(`<div class="modal-title">EDIT — ${labels[key]||key}</div>
+    <div id="sec-edit-list">${items.map((item,i)=>`<div style="display:flex;gap:6px;margin-bottom:8px;"><input type="text" id="si-${i}" value="${item}" style="flex:1;font-size:13px;"><button class="btn-danger btn-sm" onclick="rmSecItem('${key}',${i})">✕</button></div>`).join('')}</div>
+    <button class="btn btn-sec btn-sm mt8" onclick="addSecItem('${key}')">+ ADD STEP</button>
+    <div class="flex gap8 mt12"><button class="btn btn-sec" style="flex:1;" onclick="closeModal()">CANCEL</button><button class="btn btn-pri" style="flex:1;" onclick="saveSecItems('${key}')">SAVE</button></div>`);
+}
+function rmSecItem(key,i){S[key].splice(i,1);save();editSection(key);}
+function addSecItem(key){if(!S[key])S[key]=[];S[key].push('New step');save();editSection(key);}
+function saveSecItems(key){
+  const items=S[key];
+  items.forEach((_,i)=>{const el=document.getElementById(`si-${i}`);if(el)items[i]=el.value||items[i];});
+  S[key]=items;save();closeModal();
+  const map={hairMorning:['hair-am-list','hairCks','am'],hairNight:['hair-pm-list','hairCks','pm'],hairWeekly:['hair-wk-list','hairCks','wk'],skinAM:['skin-am-list','skinCks','am'],skinPM:['skin-pm-list','skinCks','pm'],hygDaily:['hyg-daily-list','hygCks','d'],hygIntimate:['hyg-int-list','hygCks','i']};
+  if(map[key])renderChecklist(...map[key]);toast('[SAVED]');
+}
+
+/* ============================================================
+   SUNDAY
+============================================================ */
+function setSunRating(v,el){S.sundayRating=v;document.querySelectorAll('#sun-rating .set-chip').forEach((e,i)=>e.classList.toggle('done',i<v));save();}
+function logSunday(){
+  if(!S.sunSessions)S.sunSessions=[];
+  S.sunSessions.unshift({date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),duration:document.getElementById('sun-dur').value||'—',rating:S.sundayRating||0,notes:document.getElementById('sun-notes').value||''});
+  S.sunSessions=S.sunSessions.slice(0,10);
+  document.getElementById('sun-dur').value='';document.getElementById('sun-notes').value='';
+  renderSunHistory();save();toast('[SESSION LOGGED]');
+}
+function renderSunHistory(){
+  const el=document.getElementById('sun-history');if(!el)return;
+  if(!S.sunSessions||!S.sunSessions.length){el.innerHTML='';return;}
+  el.innerHTML='<div class="sw"><div class="sw-head"><span class="sw-title">◈ SESSION HISTORY</span></div><div class="sw-body">'+
+    S.sunSessions.slice(0,5).map(s=>`<div class="ir"><div><div style="font-size:13.5px;font-weight:600;">${s.date}</div><div style="font-size:11px;color:var(--txt3);font-family:'Share Tech Mono',monospace;">${s.duration} min · Rating: ${s.rating}/5</div></div></div>${s.notes?`<div style="font-size:12px;color:var(--txt2);padding:4px 0 8px;border-bottom:1px solid var(--bdr);">${s.notes}</div>`:''}`).join('')+
+  '</div></div>';
+}
+
+/* ============================================================
+   OPS
+============================================================ */
+function renderOps(){
+  const el=document.getElementById('ops-list');if(!el)return;
+  if(!S.opsTasks)S.opsTasks=JSON.parse(JSON.stringify(DEFAULTS.opsTasks));
+  const catColors={gym:'b-red',nutrition:'b-blue',hair:'b-gold',skin:'b-cyan',hygiene:'b-green',general:'b-purple'};
+  el.innerHTML=S.opsTasks.map((t,i)=>`<div class="ci${t.done?' done':''}">
+    <div class="cb${t.done?' on':''}" onclick="togOps(${i},this)"><div class="cb-tick"></div></div>
+    <div class="ci-text" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">${t.text} <span class="badge ${catColors[t.cat]||'b-purple'}" style="font-size:9px;">${t.cat.toUpperCase()}</span></div>
+    <button class="ci-edit" onclick="rmOpsTask(${i})">✕</button>
+  </div>`).join('');
+  const done=S.opsTasks.filter(t=>t.done).length;
+  const opsc=document.getElementById('ops-count');if(opsc)opsc.textContent=`${done}/${S.opsTasks.length} done`;
+  updOv();
+}
+function togOps(i,el){
+  S.opsTasks[i].done=!S.opsTasks[i].done;
+  el.classList.toggle('on');el.closest('.ci').classList.toggle('done');
+  el.querySelector('.cb-tick').style.display=S.opsTasks[i].done?'block':'none';
+  const done=S.opsTasks.filter(t=>t.done).length;
+  const opsc=document.getElementById('ops-count');if(opsc)opsc.textContent=`${done}/${S.opsTasks.length} done`;
+  updOv();save();
+}
+function addOpsTask(){
+  const txt=document.getElementById('ops-new').value.trim();if(!txt)return;
+  const cat=document.getElementById('ops-cat').value;
+  if(!S.opsTasks)S.opsTasks=[];
+  S.opsTasks.push({text:txt,cat,done:false});
+  document.getElementById('ops-new').value='';renderOps();save();toast('[TASK ADDED]');
+}
+function rmOpsTask(i){S.opsTasks.splice(i,1);renderOps();save();}
+
+/* ============================================================
+   JOURNAL
+============================================================ */
+let currentMood='';
+function setMood(m,el){
+  currentMood=m;S.currentMood=m;
+  document.querySelectorAll('#pane-journal .set-chip').forEach(e=>e.classList.remove('done'));
+  el.classList.add('done');save();
+}
+function insertPrompt(t){const ta=document.getElementById('journal-text');ta.value=ta.value?ta.value+'\n\n'+t+' ':t+' ';ta.focus();}
+function saveJournal(){
+  const t=document.getElementById('journal-text').value.trim();if(!t)return;
+  if(!S.journalEntries)S.journalEntries=[];
+  S.journalEntries.unshift({date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),text:t,mood:S.currentMood||''});
+  S.journalEntries=S.journalEntries.slice(0,30);
+  document.getElementById('journal-text').value='';
+  const today=new Date().toDateString();
+  if(S.lastEntryDate!==today){
+    S.lastEntryDate=today;S.streak=(S.streak||0)+1;
+    const di=(new Date().getDay()+6)%7;
+    if(!S.weekDays)S.weekDays=[0,0,0,0,0,0,0];
+    S.weekDays[di]=1;
+    document.getElementById('streak-disp').textContent=`${S.streak} DAY STREAK`;
+    updRank();renderWkBars();
+    // auto-log heatmap
+    const todayStr=new Date().toISOString().slice(0,10);
+    if(!S.heatmapData)S.heatmapData={};
+    const cur=S.heatmapData[todayStr]||0;
+    S.heatmapData[todayStr]=Math.min(5,cur+1);
+  }
+  renderJournal();save();toast('[ENTRY SAVED]');updateHomeStats();
+}
+function renderJournal(){
+  const el=document.getElementById('journal-entries');if(!el)return;
+  if(!S.journalEntries||!S.journalEntries.length){el.innerHTML='';return;}
+  el.innerHTML=S.journalEntries.slice(0,5).map(e=>`<div class="sw"><div class="sw-head"><div class="flex-between"><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--txt2);">${e.date}</span>${e.mood?`<span class="badge b-purple">${e.mood.toUpperCase()}</span>`:''}</div></div><div class="sw-body" style="font-size:14px;line-height:1.7;white-space:pre-wrap;color:var(--txt);">${e.text}</div></div>`).join('');
+}
+
+/* ============================================================
+   HEATMAP
+============================================================ */
+let hmSelectedInt=0;
+function setHmInt(v,el){
+  hmSelectedInt=v;
+  document.querySelectorAll('#pane-heatmap .set-chip').forEach(e=>e.classList.remove('done'));
+  el.classList.add('done');
+}
+function logHeatmapDay(){
+  const d=document.getElementById('hm-date').value;
+  if(!d)return;
+  if(!S.heatmapData)S.heatmapData={};
+  S.heatmapData[d]=hmSelectedInt;
+  save();renderHeatmap();toast('[DAY LOGGED]');
+}
+
+function renderHeatmap(){
+  const grid=document.getElementById('heatmap-grid');
+  if(!grid)return;
+  if(!S.heatmapData)S.heatmapData={};
+
+  const today=new Date();
+  // Build 52 weeks backwards
+  const cells=[];
+  const d=new Date(today);
+  // go to start of week (Sunday)
+  d.setDate(d.getDate()-d.getDay());
+  // go back 51 more weeks
+  d.setDate(d.getDate()-51*7);
+
+  const months=[];
+  let lastMonth=-1;
+
+  for(let w=0;w<52;w++){
+    for(let day=0;day<7;day++){
+      const dateStr=d.toISOString().slice(0,10);
+      const intensity=S.heatmapData[dateStr]||0;
+      cells.push({dateStr,intensity,isFuture:d>today});
+      if(d.getMonth()!==lastMonth&&day===0){
+        months.push({week:w,month:d.getMonth(),year:d.getFullYear()});
+        lastMonth=d.getMonth();
+      }
+      d.setDate(d.getDate()+1);
+    }
+  }
+
+  grid.innerHTML=cells.map(c=>`<div class="hm-cell hm-${c.isFuture?0:c.intensity}" title="${c.dateStr}: ${c.intensity}/5"></div>`).join('');
+
+  // Month labels
+  const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mlRow=document.getElementById('hm-month-row');
+  if(mlRow){
+    const totalCols=52;
+    mlRow.innerHTML='';
+    // sparse rendering
+    const placed=new Set();
+    months.forEach(m=>{
+      if(!placed.has(m.month)){
+        placed.add(m.month);
+        const span=document.createElement('span');
+        span.textContent=monthNames[m.month];
+        span.style.flex='1';
+        mlRow.appendChild(span);
+      }
+    });
+  }
+
+  // Stats
+  const active=Object.values(S.heatmapData||{}).filter(v=>v>0).length;
+  const hmtotal=document.getElementById('hm-total');if(hmtotal)hmtotal.textContent=active;
+
+  // Current streak
+  let streak=0;const check=new Date();check.setDate(check.getDate()-0);
+  while(true){
+    const ds=check.toISOString().slice(0,10);
+    if((S.heatmapData[ds]||0)>0){streak++;check.setDate(check.getDate()-1);}
+    else break;
+  }
+  const hmcs=document.getElementById('hm-cur-streak');if(hmcs)hmcs.textContent=streak;
+
+  // Best streak
+  let best=0;let cur=0;
+  const sortedDates=Object.keys(S.heatmapData||{}).filter(d=>S.heatmapData[d]>0).sort();
+  sortedDates.forEach((d,i)=>{
+    if(i===0){cur=1;}
+    else{
+      const prev=new Date(sortedDates[i-1]);const curr=new Date(d);
+      const diff=(curr-prev)/(1000*60*60*24);
+      if(diff===1)cur++;else cur=1;
+    }
+    best=Math.max(best,cur);
+  });
+  const hmb=document.getElementById('hm-best');if(hmb)hmb.textContent=best;
+}
+
+/* ============================================================
+   RANK PAGE
+============================================================ */
+function renderRankPage(){
+  const s=S.streak||0;
+  let cur='E';
+  if(s>=90)cur='S';else if(s>=60)cur='A';else if(s>=30)cur='B';else if(s>=14)cur='C';else if(s>=7)cur='D';
+
+  // highlight current rank
+  ['S','A','B','C','D','E'].forEach(r=>{
+    const card=document.getElementById(`rc-${r}`);
+    if(card)card.classList.toggle('active-rank',r===cur);
+  });
+
+  // progress bars
+  const rankThresholds={S:90,A:60,B:30,C:14,D:7,E:0};
+  const rankMaxes={S:999,A:90,B:60,C:30,D:14,E:7};
+  ['S','A','B','C','D','E'].forEach(r=>{
+    const bar=document.getElementById(`rp-${r}`);
+    if(!bar)return;
+    const min=rankThresholds[r];const max=rankMaxes[r];
+    let pct=0;
+    if(s>=max)pct=100;
+    else if(s>=min)pct=Math.round(((s-min)/(max-min))*100);
+    bar.style.width=pct+'%';
+  });
+
+  // Overall progress text
+  const nextThresholds={E:7,D:14,C:30,B:60,A:90,S:null};
+  const next=nextThresholds[cur];
+  const progTxt=document.getElementById('rank-prog-txt');
+  const progBar=document.getElementById('rank-prog-bar');
+  if(cur==='S'){
+    if(progTxt)progTxt.textContent='MAX RANK';
+    if(progBar)progBar.style.width='100%';
+  } else {
+    const min=rankThresholds[cur];
+    const pct=Math.round(((s-min)/(next-min))*100);
+    if(progTxt)progTxt.textContent=`${s} / ${next} days`;
+    if(progBar)progBar.style.width=pct+'%';
+  }
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(html){document.getElementById('modal-body').innerHTML=html;document.getElementById('modal-overlay').classList.add('open');}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+
+/* ============================================================
+   AUTO SAVE ON INPUT
+============================================================ */
+document.addEventListener('input',e=>{
+  if(e.target.id==='hair-notes'){S.hairNotes=e.target.value;save();}
+  if(e.target.id==='neck-tone'){S.neckTone=+e.target.value;updNeckTone();save();}
+});
+
+/* ============================================================
+   START
+============================================================ */
+init();
+</script>
+</body>
+</html>
